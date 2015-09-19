@@ -14,7 +14,8 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <!--<li id="scheduleNavBar"><a href="{{pathFor 'schedule'}}">Jadwal sservis di bengkel</a></li>-->
+                    <li><a href="{{pathFor 'settings'}}">Settings</a></li>
+                    <li><a href="{{pathFor 'input'}}">Input</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {{> loginButtons}}
@@ -39,7 +40,7 @@
         {{#if currentUser}}
             Do what you have to do
         {{else}}
-            <div class="jumbotron danger">
+            <div class="jumbotron">
                 <h1>You're not logged in!</h1>
                 <p>If you can't log in, ask Raymond.</p>
             </div>
@@ -47,3 +48,92 @@
     </div>
 </template>
 
+<template name="settings">
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Settings</h1>
+            <p>This is where you can change the constants used when doing calculation. These values rarely change, therefore we'll save time on the input process by keeping it as constants.</p>
+        </div>
+        <form class="form-horizontal">
+            <h3>Pre-press</h3>
+            <div class="form-group">
+                <label for="materialCost" class="col-sm-3 control-label">Pre-press Material Cost</label>
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">Rp.</span>
+                        <input type="text" class="form-control rupiah" id="materialCost" placeholder="1 500 000" value="{{settings.materialCost}}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="safetyFactor" class="col-sm-3 control-label">Pre-press Safety Factor</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" id="safetyFactor" placeholder="2" value="{{settings.safetyFactor}}">
+                </div>
+            </div>
+            <h3>Manufacturing Process</h3>
+            <div class="form-group">
+                <label for="operatorCost" class="col-sm-3 control-label">Operator Cost</label>
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">Rp.</span>
+                        <input type="text" class="form-control rupiah" id="operatorCost" placeholder="13 000" value="{{settings.operatorCost}}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="efficiencyFactor" class="col-sm-3 control-label">Efficiency Factor</label>
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="efficiencyFactor" placeholder="75" value="{{settings.efficiencyFactor}}">
+                        <span class="input-group-addon">%</span>
+                    </div>
+                </div>
+            </div>
+            <h3>Waste</h3>
+            <div class="form-group">
+                <label for="operatorWastePercent" class="col-sm-3 control-label">Operator Waste Percent</label>
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="operatorWastePercent" placeholder="5" value="{{settings.operatorWastePercent}}">
+                        <span class="input-group-addon">%</span>
+                    </div>
+                </div>
+            </div>
+            <p class="text-info">Last updated: {{settings.timeCreated}}</p>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        &nbsp;
+    </div>
+</template>
+
+<template name="input">
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Input</h1>
+            <p>This is where we insert the inquiries for precosting. This is the starting point.</p>
+        </div>
+
+        <form>
+            <div class="form-group">
+                <label for="name">Nama Lengkap</label>
+                <input type="text" class="form-control" id="name" placeholder="Siti Nurhaliza">
+            </div>
+            <div class="form-group">
+                <label for="phone">Handphone</label>
+                <input type="tel" class="form-control" id="phone" placeholder="08100055577">
+            </div>
+            <div class="form-group">
+                <label for="date">Tanggal</label>
+                <input type="date" class="form-control" id="date" min="2015-01-01" max="2020-12-31">
+            </div>
+            <div class="form-group">
+                <label for="time">Jam</label>
+                <input type="time" class="form-control" id="time" min="08:00" max="17:00">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        &nbsp;
+
+    </div>
+</template>
