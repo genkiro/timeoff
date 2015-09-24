@@ -1,0 +1,269 @@
+
+
+<template name="calculation">
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Calculation {{b}} {{a}}</h1>
+            <p>Order Name: Liana Gonta, Ibu</p>
+            <p>Order Date: 5 Nov 1990</p>
+        </div>
+
+        <div class="container">
+            <div class="container col-sm-6">
+                <form class="form-horizontal">
+                    <h3>Input</h3>
+                    <div class="form-group">
+                        <label for="targetProfitMargin" class="col-sm-3 control-label">Target Profit Margin</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control number" id="targetProfitMargin" placeholder="23" value="{{targetProfitMargin}}">
+                                <span class="input-group-addon">%</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="container col-sm-6">
+                <form class="form-horizontal">
+                    <h3>Output</h3>
+                    <div class="form-group">
+                        <label for="salesPricePerPiece" class="col-sm-3 control-label">Sales Price (piece)</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Rp.</span>
+                                <input type="text" class="form-control number" id="salesPricePerPiece" placeholder="118.94" value="{{a}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="netProfit" class="col-sm-3 control-label">Net Profit</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Rp.</span>
+                                <input type="text" class="form-control number" id="netProfit" placeholder="2 333 444.98">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="totalSales" class="col-sm-3 control-label">Total Sales</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Rp.</span>
+                                <input type="text" class="form-control number" id="totalSales" placeholder="56 789 000">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="container text-center col-md-4">
+                <h1>Dimension</h1>
+
+                <h3>Product</h3>
+                <table class="table table-hover table-condensed">
+                    <tbody>
+                        <tr><th>Length</th> <td class="text-right">70</td><td>m</td></tr>
+                        <tr><th>Width</th>  <td class="text-right">50</td><td>m</td></tr>
+                        <tr><th>Width</th>  <td class="text-right">500</td><td>m² / biji</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Cylinder and Die</h3>
+                <table class="table table-hover table-condensed">
+                    <tbody>
+                        <tr><th>Cylinder Diameter</th>      <td class="text-right">70</td><td>m</td></tr>
+                        <tr><th>Die Length</th>             <td class="text-right">50</td><td>m</td></tr>
+                        <tr><th>Die Width</th>              <td class="text-right">50</td><td>m</td></tr>
+                        <tr><th>Total Die Area</th>         <td class="text-right">500</td><td>m²</td></tr>
+                        <tr><th>Total Piece in 1 Die</th>   <td class="text-right">4</td><td></td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Pre-Press</h3>
+                <table class="table table-hover table-condensed">
+                    <tbody>
+                        <tr><th>Pre-press Material Cost</th>     <td class="text-right">70</td><td>m</td></tr>
+                        <tr><th>Pre-press Area per cylinder</th> <td class="text-right">50</td><td>m</td></tr>
+                        <tr><th>Number of Die</th>               <td class="text-right">50</td><td>m</td></tr>
+                        <tr><th>Pre=press Safety Factor</th>     <td class="text-right">500</td><td>m²</td></tr>
+                        <tr><th>Total Pre-press Cost</th>        <td class="text-right">4</td><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="container text-center col-md-4">
+                <h1>Material</h1>
+
+                <h3>Paper</h3>
+                <table class="table table-hover table-condensed">
+                    <tbody>
+                        <tr><th>Material Type</th>  <td class="text-right">Eskoto</td><td></td></tr>
+                        <tr><th>Material Price</th> <td class="text-right">Rp. 12 000</td><td>per m²</td></tr>
+                        <tr><th>Total</th>          <td class="text-right">Rp. 13 000 000</td><td></td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Ink</h3>
+                <table class="table table-hover table-condensed">
+                    <tbody>
+                        <tr><th>Color 1</th><td></td><td></td></tr>
+                        <tr><th>Quantity</th> <td class="text-right">100 000</td><td></td></tr>
+                        <tr><th>Cost</th>     <td class="text-right">Rp. 80 000</td><td></td></tr>
+                        <tr><th>Color 2</th><td></td><td></td></tr>
+                        <tr><th>Quantity</th> <td class="text-right">100 000</td><td></td></tr>
+                        <tr><th>Cost</th>     <td class="text-right">Rp. 80 000</td><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="container text-center col-md-4">
+                <h1>Manufacturing</h1>
+
+                <h3>Order Quantity & Packaging</h3>
+                <table class="table table-hover table-condensed">
+                    <tbody>
+                        <tr><th>Quantity</th>                   <td class="text-right">70</td><td>pieces</td></tr>
+                        <tr><th>Box</th>                        <td class="text-right">50</td><td></td></tr>
+                        <tr><th>Total Paper Weight</th>         <td class="text-right">4</td><td>kg</td></tr>
+                        <tr><th>Total Finished Product Area</th><td class="text-right">4</td><td>m²</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Manufacturing Process</h3>
+                <table class="table table-hover table-condensed">
+                    <tbody>
+                        <tr><th>Machine Name</th>           <td class="text-right">70</td><td></td></tr>
+                        <tr><th>Machine Speed</th>          <td class="text-right">50</td><td>m/min</td></tr>
+                        <tr><th>Configuration Width</th>    <td class="text-right">4</td><td>m</td></tr>
+                        <tr><th>Number of Operator</th>     <td class="text-right">4</td><td></td></tr>
+                        <tr><th>Operation Setup Time</th>   <td class="text-right">4</td><td>jam</td></tr>
+                        <tr><th>Operator Cost</th>          <td class="text-right">Rp. 14 000</td><td></td></tr>
+                        <tr><th>Efficiency Factor</th>      <td class="text-right">4</td><td>%</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Waste Summary Per Piece</h3>
+                <table class="table table-hover table-condensed">
+                    <tbody>
+                        <tr><th>Operator Waste Percent</th> <td class="text-right">70</td><td>%</td></tr>
+                        <tr><th>Operator Waste</th>         <td class="text-right">50</td><td></td></tr>
+                        <tr><th>Config Waste</th>           <td class="text-right">4</td><td></td></tr>
+                        <tr><th>Config Waste Percent</th>   <td class="text-right">4</td><td>%</td></tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        <div class="container col-md-8 text-center">
+            <h1>Specification Summary</h1>
+
+            <h3>Paper Area</h3>
+            <table class="table table-hover table-condensed">
+                <tbody>
+                    <tr><th>Total Finished Product Area</th> <td class="text-right">70</td><td></td><td>pieces</td></tr>
+                    <tr><th>Total Config Waste</th>          <td class="text-right">50</td><td></td><td></td></tr>
+                    <tr><th>Total Operator Waste Target</th> <td class="text-right">4</td><td></td><td>kg</td></tr>
+                    <tr><th>Total Manufacturing Area</th>    <td></td><td class="text-right">4</td><td>m²</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Paper Cost</h3>
+            <table class="table table-hover table-condensed">
+                <tbody>
+                    <tr><th>Total Finished Product Cost</th> <td class="text-right">70</td><td></td><td>pieces</td></tr>
+                    <tr><th>Total Config Waste Cost</th>          <td class="text-right">50</td><td></td><td></td></tr>
+                    <tr><th>Total Operator Waste Cost</th> <td class="text-right">4</td><td></td><td>kg</td></tr>
+                    <tr><th>Total Manufacturing Cost</th>    <td></td><td class="text-right">4</td><td>m²</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Manufacturing</h3>
+            <table class="table table-hover table-condensed">
+                <tbody>
+                    <tr><th>Total Length</th> <td class="text-right">70</td><td></td><td>pieces</td></tr>
+                    <tr><th>Total Production Time</th>          <td class="text-right">50</td><td></td><td></td></tr>
+                    <tr><th>Total Man Hour</th> <td class="text-right">4</td><td></td><td>kg</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Ink</h3>
+            <table class="table table-hover table-condensed">
+                <tbody>
+                    <tr><th>Total Color Cost</th> <td class="text-right">70</td><td></td><td>pieces</td></tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="container col-md-8 text-center">
+            <h1>Pre-costing Breakdown Total</h1>
+
+            <table class="table table-hover table-condensed">
+                <tbody>
+                    <tr><th>Paper Cost</th>        <td class="text-right">70</td><td></td><td>pieces</td></tr>
+                    <tr><th>Ink Cost</th>          <td class="text-right">50</td><td></td><td></td></tr>
+                </tbody>
+                <tbody>
+                    <tr><th>Total Material Cost</th>                          <td></td><td class="text-right">4</td><td>kg</td></tr>
+                    <tr><th>Total Labor Cost</th>                             <td></td><td class="text-right">4</td><td>m²</td></tr>
+                    <tr><th>Total Overhead (only pre-press for now) Cost</th> <td></td><td class="text-right">4</td><td>m²</td></tr>
+                </tbody>
+                <tbody>
+                    <tr><th>Profit Margin</th>     <td class="text-right">70</td><td></td><td>pieces</td></tr>
+                    <tr><th>Profit</th>            <td class="text-right">50</td><td></td><td></td></tr>
+                    <tr><th>Total Profit</th>      <td></td><td class="text-right">4</td><td>kg</td></tr>
+                    <tr><th>Total Sales Price</th> <td></td><td class="text-right">4</td><td>m²</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="container col-md-8 text-center">
+            <h1>Pre-costing Breakdown By Per Piece</h1>
+
+            <table class="table table-hover table-condensed">
+                <tbody>
+                <tr><th>Paper Cost</th>        <td class="text-right">70</td><td></td><td>pieces</td></tr>
+                <tr><th>Ink Cost</th>          <td class="text-right">50</td><td></td><td></td></tr>
+                </tbody>
+                <tbody>
+                <tr><th>Total Material Cost</th>                          <td></td><td class="text-right">4</td><td>kg</td></tr>
+                <tr><th>Total Labor Cost</th>                             <td></td><td class="text-right">4</td><td>m²</td></tr>
+                <tr><th>Total Overhead (only pre-press for now) Cost</th> <td></td><td class="text-right">4</td><td>m²</td></tr>
+                </tbody>
+                <tbody>
+                <tr><th>Profit Margin</th>     <td class="text-right">70</td><td></td><td>pieces</td></tr>
+                <tr><th>Profit</th>            <td class="text-right">50</td><td></td><td></td></tr>
+                <tr><th>Total Profit</th>      <td></td><td class="text-right">4</td><td>kg</td></tr>
+                <tr><th>Total Sales Price</th> <td></td><td class="text-right">4</td><td>m²</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="container col-md-8 text-center">
+            <h1>Pre-costing Breakdown By m²</h1>
+
+            <table class="table table-hover table-condensed">
+                <tbody>
+                <tr><th>Paper Cost</th>        <td class="text-right">70</td><td></td><td>pieces</td></tr>
+                <tr><th>Ink Cost</th>          <td class="text-right">50</td><td></td><td></td></tr>
+                </tbody>
+                <tbody>
+                <tr><th>Total Material Cost</th>                          <td></td><td class="text-right">4</td><td>kg</td></tr>
+                <tr><th>Total Labor Cost</th>                             <td></td><td class="text-right">4</td><td>m²</td></tr>
+                <tr><th>Total Overhead (only pre-press for now) Cost</th> <td></td><td class="text-right">4</td><td>m²</td></tr>
+                </tbody>
+                <tbody>
+                <tr><th>Profit Margin</th>     <td class="text-right">70</td><td></td><td>pieces</td></tr>
+                <tr><th>Profit</th>            <td class="text-right">50</td><td></td><td></td></tr>
+                <tr><th>Total Profit</th>      <td></td><td class="text-right">4</td><td>kg</td></tr>
+                <tr><th>Total Sales Price</th> <td></td><td class="text-right">4</td><td>m²</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</template>
