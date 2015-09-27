@@ -4,8 +4,38 @@
     <div class="container">
         <div class="jumbotron">
             <h1>Calculation {{b}} {{a}}</h1>
-            <p>Order Name: Liana Gonta, Ibu</p>
-            <p>Order Date: 5 Nov 1990</p>
+            <p>Order Name: {{input.customer}}</p>
+            <p>Order Date: {{input.entryDate}}</p>
+            <p>Settings:
+                <ul>
+                    <li>Material Cost: {{settings.materialCost}}</li>
+                    <li>Safety Factor: {{settings.safetyFactor}}</li>
+                    <li>Operator Cost: {{settings.operatorCost}}</li>
+                    <li>Efficiency Factor: {{settings.efficiencyFactor}}</li>
+                    <li>Operator Waste Percent: {{settings.operatorWastePercent}}</li>
+                    <li>Time Created: {{settings.timeCreated}}</li>
+                </ul>
+            </p>
+
+            <p>Input:
+                <ul>
+                    <li>customer: {{input.customer}}</li>
+                    <li>entryDate: {{input.entryDate}}</li>
+                    <li>itemCode: {{input.itemCode}}</li>
+                    <li>orderName: {{input.orderName}}</li>
+                    <li>quantity: {{input.quantity}}</li>
+                    <li>designAge: {{input.designAge}}</li>
+                    <li>prodLength: {{input.prodLength}}</li>
+                    <li>prodWidth: {{input.prodWidth}}</li>
+                    <li>paperType: {{input.paperType}}</li>
+                    <li>dieLength: {{input.dieLength}}</li>
+                    <li>dieWidth: {{input.dieWidth}}</li>
+                    <li>totalPiecesInDie: {{input.totalPiecesInDie}}</li>
+                    <li>nDieColor: {{input.nDieColor}}</li>
+                    <li>machineName: {{input.machineName}}</li>
+                    <li>inkPaperCostPercent: {{input.inkPaperCostPercent}}</li>
+                </ul>
+            </p>
         </div>
 
         <div class="container">
@@ -16,7 +46,16 @@
                         <label for="targetProfitMargin" class="col-sm-3 control-label">Target Profit Margin</label>
                         <div class="col-sm-6">
                             <div class="input-group">
-                                <input type="text" class="form-control number" id="targetProfitMargin" placeholder="23" value="{{targetProfitMargin}}">
+                                <input type="text" class="form-control number" id="targetProfitMargin" placeholder="23" value="{{b}}">
+                                <span class="input-group-addon">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="playground" class="col-sm-3 control-label">Playground</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control number" id="playground" placeholder="23" value="{{b}}">
                                 <span class="input-group-addon">%</span>
                             </div>
                         </div>
@@ -64,31 +103,31 @@
                 <h3>Product</h3>
                 <table class="table table-hover table-condensed">
                     <tbody>
-                        <tr><th>Length</th> <td class="text-right">70</td><td>m</td></tr>
-                        <tr><th>Width</th>  <td class="text-right">50</td><td>m</td></tr>
-                        <tr><th>Width</th>  <td class="text-right">500</td><td>m² / biji</td></tr>
+                        <tr><th>Length</th>     <td class="text-right">{{prodLength}}</td><td>m</td></tr>
+                        <tr><th>Width</th>      <td class="text-right">{{prodWidth}}</td><td>m</td></tr>
+                        <tr><th>Total Area</th> <td class="text-right">{{prodTotArea}}</td><td>m² / biji</td></tr>
                     </tbody>
                 </table>
 
                 <h3>Cylinder and Die</h3>
                 <table class="table table-hover table-condensed">
                     <tbody>
-                        <tr><th>Cylinder Diameter</th>      <td class="text-right">70</td><td>m</td></tr>
-                        <tr><th>Die Length</th>             <td class="text-right">50</td><td>m</td></tr>
-                        <tr><th>Die Width</th>              <td class="text-right">50</td><td>m</td></tr>
-                        <tr><th>Total Die Area</th>         <td class="text-right">500</td><td>m²</td></tr>
-                        <tr><th>Total Piece in 1 Die</th>   <td class="text-right">4</td><td></td></tr>
+                        <tr><th>Cylinder Diameter</th>      <td class="text-right">{{cylDiameter}}</td><td>m</td></tr>
+                        <tr><th>Die Length</th>             <td class="text-right">{{dieLength}}</td><td>m</td></tr>
+                        <tr><th>Die Width</th>              <td class="text-right">{{dieWidth}}</td><td>m</td></tr>
+                        <tr><th>Total Die Area</th>         <td class="text-right">{{totDieArea}}</td><td>m²</td></tr>
+                        <tr><th>Total Piece in 1 Die</th>   <td class="text-right">{{totPiecesIn1Die}}</td><td></td></tr>
                     </tbody>
                 </table>
 
                 <h3>Pre-Press</h3>
                 <table class="table table-hover table-condensed">
                     <tbody>
-                        <tr><th>Pre-press Material Cost</th>     <td class="text-right">70</td><td>m</td></tr>
-                        <tr><th>Pre-press Area per cylinder</th> <td class="text-right">50</td><td>m</td></tr>
-                        <tr><th>Number of Die</th>               <td class="text-right">50</td><td>m</td></tr>
-                        <tr><th>Pre=press Safety Factor</th>     <td class="text-right">500</td><td>m²</td></tr>
-                        <tr><th>Total Pre-press Cost</th>        <td class="text-right">4</td><td></td></tr>
+                        <tr><th>Pre-press Material Cost</th>     <td class="text-right">{{prePressMatCost}}</td><td>m</td></tr>
+                        <tr><th>Pre-press Area per cylinder</th> <td class="text-right">{{prePressArea}}</td><td>m</td></tr>
+                        <tr><th>Number of Die</th>               <td class="text-right">{{nDie}}</td><td>m</td></tr>
+                        <tr><th>Pre-press Safety Factor</th>     <td class="text-right">{{prePressSafetyFactor}}</td><td>m²</td></tr>
+                        <tr><th>Total Pre-press Cost</th>        <td class="text-right">{{totPrePressCost}}</td><td></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -99,9 +138,9 @@
                 <h3>Paper</h3>
                 <table class="table table-hover table-condensed">
                     <tbody>
-                        <tr><th>Material Type</th>  <td class="text-right">Eskoto</td><td></td></tr>
-                        <tr><th>Material Price</th> <td class="text-right">Rp. 12 000</td><td>per m²</td></tr>
-                        <tr><th>Total</th>          <td class="text-right">Rp. 13 000 000</td><td></td></tr>
+                        <tr><th>Material Type</th>  <td class="text-right">{{paperType}}</td><td></td></tr>
+                        <tr><th>Material Price</th> <td class="text-right">Rp. {{paperPrice}}</td><td>per m²</td></tr>
+                        <tr><th>Total</th>          <td class="text-right">Rp. {{totPaperPrice}}</td><td></td></tr>
                     </tbody>
                 </table>
 
@@ -109,11 +148,11 @@
                 <table class="table table-hover table-condensed">
                     <tbody>
                         <tr><th>Color 1</th><td></td><td></td></tr>
-                        <tr><th>Quantity</th> <td class="text-right">100 000</td><td></td></tr>
-                        <tr><th>Cost</th>     <td class="text-right">Rp. 80 000</td><td></td></tr>
+                        <tr><th>Quantity</th> <td class="text-right">100 000?</td><td></td></tr>
+                        <tr><th>Cost</th>     <td class="text-right">Rp. 80 000?</td><td></td></tr>
                         <tr><th>Color 2</th><td></td><td></td></tr>
-                        <tr><th>Quantity</th> <td class="text-right">100 000</td><td></td></tr>
-                        <tr><th>Cost</th>     <td class="text-right">Rp. 80 000</td><td></td></tr>
+                        <tr><th>Quantity</th> <td class="text-right">100 000?</td><td></td></tr>
+                        <tr><th>Cost</th>     <td class="text-right">Rp. 80 000?</td><td></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -124,33 +163,33 @@
                 <h3>Order Quantity & Packaging</h3>
                 <table class="table table-hover table-condensed">
                     <tbody>
-                        <tr><th>Quantity</th>                   <td class="text-right">70</td><td>pieces</td></tr>
-                        <tr><th>Box</th>                        <td class="text-right">50</td><td></td></tr>
-                        <tr><th>Total Paper Weight</th>         <td class="text-right">4</td><td>kg</td></tr>
-                        <tr><th>Total Finished Product Area</th><td class="text-right">4</td><td>m²</td></tr>
+                        <tr><th>Quantity</th>                   <td class="text-right">{{quantity}}</td><td>pieces</td></tr>
+                        <tr><th>Box</th>                        <td class="text-right">50?</td><td></td></tr>
+                        <tr><th>Total Paper Weight</th>         <td class="text-right">4?</td><td>kg</td></tr>
+                        <tr><th>Total Finished Product Area</th><td class="text-right">{{totFinishedProdArea}}</td><td>m²</td></tr>
                     </tbody>
                 </table>
 
                 <h3>Manufacturing Process</h3>
                 <table class="table table-hover table-condensed">
                     <tbody>
-                        <tr><th>Machine Name</th>           <td class="text-right">70</td><td></td></tr>
-                        <tr><th>Machine Speed</th>          <td class="text-right">50</td><td>m/min</td></tr>
-                        <tr><th>Configuration Width</th>    <td class="text-right">4</td><td>m</td></tr>
-                        <tr><th>Number of Operator</th>     <td class="text-right">4</td><td></td></tr>
-                        <tr><th>Operation Setup Time</th>   <td class="text-right">4</td><td>jam</td></tr>
-                        <tr><th>Operator Cost</th>          <td class="text-right">Rp. 14 000</td><td></td></tr>
-                        <tr><th>Efficiency Factor</th>      <td class="text-right">4</td><td>%</td></tr>
+                        <tr><th>Machine Name</th>           <td class="text-right">{{machineName}}</td><td></td></tr>
+                        <tr><th>Machine Speed</th>          <td class="text-right">{{machineSpeed}}</td><td>m/min</td></tr>
+                        <tr><th>Configuration Width</th>    <td class="text-right">{{confWidth}}</td><td>m</td></tr>
+                        <tr><th>Number of Operator</th>     <td class="text-right">{{nOperator}}</td><td></td></tr>
+                        <tr><th>Operation Setup Time</th>   <td class="text-right">{{setupTime}}</td><td>jam</td></tr>
+                        <tr><th>Operator Cost</th>          <td class="text-right">Rp. {{operatorCost}}</td><td></td></tr>
+                        <tr><th>Efficiency Factor</th>      <td class="text-right">{{efficiencyFactor}}</td><td>%</td></tr>
                     </tbody>
                 </table>
 
                 <h3>Waste Summary Per Piece</h3>
                 <table class="table table-hover table-condensed">
                     <tbody>
-                        <tr><th>Operator Waste Percent</th> <td class="text-right">70</td><td>%</td></tr>
-                        <tr><th>Operator Waste</th>         <td class="text-right">50</td><td></td></tr>
-                        <tr><th>Config Waste</th>           <td class="text-right">4</td><td></td></tr>
-                        <tr><th>Config Waste Percent</th>   <td class="text-right">4</td><td>%</td></tr>
+                        <tr><th>Operator Waste Percent</th> <td class="text-right">{{operatorWastePerc}}</td><td>%</td></tr>
+                        <tr><th>Operator Waste</th>         <td class="text-right">{{operatorWaste}}</td><td></td></tr>
+                        <tr><th>Config Waste</th>           <td class="text-right">{{configWaste}}</td><td></td></tr>
+                        <tr><th>Config Waste Percent</th>   <td class="text-right">{{configWastePerc}}</td><td>%</td></tr>
                     </tbody>
                 </table>
 
@@ -163,36 +202,36 @@
             <h3>Paper Area</h3>
             <table class="table table-hover table-condensed">
                 <tbody>
-                    <tr><th>Total Finished Product Area</th> <td class="text-right">70</td><td></td><td>pieces</td></tr>
-                    <tr><th>Total Config Waste</th>          <td class="text-right">50</td><td></td><td></td></tr>
-                    <tr><th>Total Operator Waste Target</th> <td class="text-right">4</td><td></td><td>kg</td></tr>
-                    <tr><th>Total Manufacturing Area</th>    <td></td><td class="text-right">4</td><td>m²</td></tr>
+                    <tr><th>Total Finished Product Area</th> <td class="text-right">{{totFinishedProdArea}}</td><td></td><td>pieces</td></tr>
+                    <tr><th>Total Config Waste</th>          <td class="text-right">{{totConfigWaste}}</td><td></td><td></td></tr>
+                    <tr><th>Total Operator Waste Target</th> <td class="text-right">{{totOperatorWasteTarget}}</td><td></td><td>kg</td></tr>
+                    <tr><th>Total Manufacturing Area</th>    <td></td><td class="text-right">{{totManufacturingArea}}</td><td>m²</td></tr>
                 </tbody>
             </table>
 
             <h3>Paper Cost</h3>
             <table class="table table-hover table-condensed">
                 <tbody>
-                    <tr><th>Total Finished Product Cost</th> <td class="text-right">70</td><td></td><td>pieces</td></tr>
-                    <tr><th>Total Config Waste Cost</th>          <td class="text-right">50</td><td></td><td></td></tr>
-                    <tr><th>Total Operator Waste Cost</th> <td class="text-right">4</td><td></td><td>kg</td></tr>
-                    <tr><th>Total Manufacturing Cost</th>    <td></td><td class="text-right">4</td><td>m²</td></tr>
+                    <tr><th>Total Finished Product Cost</th> <td class="text-right">{{totFinishedProdCost}}</td><td></td><td>pieces</td></tr>
+                    <tr><th>Total Config Waste Cost</th>     <td class="text-right">{{totConfigWasteCost}}</td><td></td><td></td></tr>
+                    <tr><th>Total Operator Waste Cost</th>   <td class="text-right">{{totOperatorWasteCost}}</td><td></td><td>kg</td></tr>
+                    <tr><th>Total Manufacturing Cost</th>    <td></td><td class="text-right">{{totManufacturingCost}}</td><td>m²</td></tr>
                 </tbody>
             </table>
 
             <h3>Manufacturing</h3>
             <table class="table table-hover table-condensed">
                 <tbody>
-                    <tr><th>Total Length</th> <td class="text-right">70</td><td></td><td>pieces</td></tr>
-                    <tr><th>Total Production Time</th>          <td class="text-right">50</td><td></td><td></td></tr>
-                    <tr><th>Total Man Hour</th> <td class="text-right">4</td><td></td><td>kg</td></tr>
+                    <tr><th>Total Length</th>           <td class="text-right">{{totLength}}</td><td></td><td>pieces</td></tr>
+                    <tr><th>Total Production Time</th>  <td class="text-right">{{totProdTime}}</td><td></td><td></td></tr>
+                    <tr><th>Total Man Hour</th>         <td class="text-right">{{totManHour}}</td><td></td><td>kg</td></tr>
                 </tbody>
             </table>
 
             <h3>Ink</h3>
             <table class="table table-hover table-condensed">
                 <tbody>
-                    <tr><th>Total Color Cost</th> <td class="text-right">70</td><td></td><td>pieces</td></tr>
+                    <tr><th>Total Color Cost</th> <td class="text-right">{{totColorCost}}</td><td></td><td>pieces</td></tr>
                 </tbody>
             </table>
 
