@@ -1,5 +1,33 @@
 console.log('client file');
 
+// load a language
+numeral.language('id', {
+    delimiters: {
+        thousands: ' ',
+        decimal: ','
+    },
+    abbreviations: {
+        thousand: 'ribu',
+        million: 'juta',
+        billion: 'milyar',
+        trillion: 'trilliun'
+    },
+    currency: {
+        symbol: 'Rp. '
+    }
+});
+
+// switch between languages
+numeral.language('id');
+
+$.each({
+    rp: function (n) {
+        return numeral(n).format('$ 0,0[.]00');
+    }
+}, function ( name, handler ) {
+    Handlebars.registerHelper( name, handler );
+});
+
 Template.inputCreate.rendered = function() {
     var $date = $('.date');
     $date.datepicker({
@@ -27,17 +55,17 @@ Template.inputCreate.events({
             entryDate: $(e.target.entryDate).datepicker('getDate'),
             itemCode: e.target.itemCode.value,
             orderName: e.target.orderName.value,
-            quantity: $(e.target.quantity).inputmask('unmaskedvalue'),
+            quantity: Number($(e.target.quantity).inputmask('unmaskedvalue')),
             designAge: $('input[name="designAge"]:checked').val(),
-            prodLength: $(e.target.prodLength).inputmask('unmaskedvalue'),
-            prodWidth: $(e.target.prodWidth).inputmask('unmaskedvalue'),
+            prodLength: Number($(e.target.prodLength).inputmask('unmaskedvalue')),
+            prodWidth: Number($(e.target.prodWidth).inputmask('unmaskedvalue')),
             paperType: e.target.paperType.value,
-            dieLength: $(e.target.dieLength).inputmask('unmaskedvalue'),
-            dieWidth: $(e.target.dieWidth).inputmask('unmaskedvalue'),
-            totalPiecesInDie: $(e.target.totalPiecesInDie).inputmask('unmaskedvalue'),
-            nDieColor: $(e.target.nDieColor).inputmask('unmaskedvalue'),
+            dieLength: Number($(e.target.dieLength).inputmask('unmaskedvalue')),
+            dieWidth: Number($(e.target.dieWidth).inputmask('unmaskedvalue')),
+            totalPiecesInDie: Number($(e.target.totalPiecesInDie).inputmask('unmaskedvalue')),
+            nDieColor: Number($(e.target.nDieColor).inputmask('unmaskedvalue')),
             machineName: e.target.machineName.value,
-            inkPaperCostPercent: $(e.target.inkPaperCostPercent).inputmask('unmaskedvalue')
+            inkPaperCostPercent: Number($(e.target.inkPaperCostPercent).inputmask('unmaskedvalue'))
         }, function (err, result) {
             if (err) {
                 var msg = "err: " + err;
@@ -77,7 +105,7 @@ Template.settings.events({
         e.preventDefault();
         Papers.insert({
             name: $('#newPaperName').val(),
-            price: $('#newPaperPrice').val(),
+            price: Number($('#newPaperPrice').val()),
         }, function (err, result) {
             if (err) {
                 var msg = "err: " + err;
@@ -106,9 +134,9 @@ Template.settings.events({
         e.preventDefault();
         Machines.insert({
             name: $('#newMachineName').val(),
-            speed: $('#newMachineSpeed').val(),
-            setupTime: $('#newMachineSetupTime').val(),
-            nOperator: $('#newMachineNOperator').val()
+            speed: Number($('#newMachineSpeed').val()),
+            setupTime: Number($('#newMachineSetupTime').val()),
+            nOperator: Number($('#newMachineNOperator').val())
         }, function (err, result) {
             if (err) {
                 var msg = "err: " + err;
@@ -139,11 +167,11 @@ Template.settings.events({
         e.preventDefault();
 
         Settings.insert({
-            materialCost: $(e.target.materialCost).inputmask('unmaskedvalue'),
-            safetyFactor: e.target.safetyFactor.value,
-            operatorCost: $(e.target.operatorCost).inputmask('unmaskedvalue'),
-            efficiencyFactor: e.target.efficiencyFactor.value,
-            operatorWastePercent: e.target.operatorWastePercent.value,
+            materialCost: Number($(e.target.materialCost).inputmask('unmaskedvalue')),
+            safetyFactor: Number(e.target.safetyFactor.value),
+            operatorCost: Number($(e.target.operatorCost).inputmask('unmaskedvalue')),
+            efficiencyFactor: Number(e.target.efficiencyFactor.value),
+            operatorWastePercent: Number(e.target.operatorWastePercent.value),
             timeCreated: new Date()
         }, function (err, result) {
             if (err) {

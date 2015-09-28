@@ -237,10 +237,6 @@ Template.calculation.helpers({
         return totLength.get();
     },
     totProdTime: function() {
-        // this is wrong because setupTime is a string.
-        console.log('first: ' + (1 / (efficiencyFactor.get()/100) * totLength.get() / machineSpeed.get() / 60));
-        console.log('setupTime: ' + setupTime.get());
-        console.log((1 / (efficiencyFactor.get()/100) * totLength.get() / machineSpeed.get() / 60) + setupTime.get());
         totProdTime.set((1 / (efficiencyFactor.get()/100) * totLength.get() / machineSpeed.get() / 60) + setupTime.get());
         return totProdTime.get();
     },
@@ -249,7 +245,7 @@ Template.calculation.helpers({
         return totManHour.get();
     },
     totColorCost: function() {
-        totColorCost.set(this.input.inkPaperCostPercent * totManufacturingCost.get());
+        totColorCost.set(this.input.inkPaperCostPercent/100 * totManufacturingCost.get());
         return totColorCost.get();
     },
     totPaperCost: function() {

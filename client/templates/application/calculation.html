@@ -116,18 +116,18 @@
                         <tr><th>Die Length</th>             <td class="text-right">{{dieLength}}</td><td>m</td></tr>
                         <tr><th>Die Width</th>              <td class="text-right">{{dieWidth}}</td><td>m</td></tr>
                         <tr><th>Total Die Area</th>         <td class="text-right">{{totDieArea}}</td><td>m²</td></tr>
-                        <tr><th>Total Piece in 1 Die</th>   <td class="text-right">{{totPiecesIn1Die}}</td><td></td></tr>
+                        <tr><th>Total Piece in 1 Die</th>   <td class="text-right">{{totPiecesIn1Die}}</td><td>pcs</td></tr>
                     </tbody>
                 </table>
 
                 <h3>Pre-Press</h3>
                 <table class="table table-hover table-condensed">
                     <tbody>
-                        <tr><th>Pre-press Material Cost</th>     <td class="text-right">{{prePressMatCost}}</td><td>m</td></tr>
-                        <tr><th>Pre-press Area per cylinder</th> <td class="text-right">{{prePressArea}}</td><td>m</td></tr>
-                        <tr><th>Number of Die</th>               <td class="text-right">{{nDie}}</td><td>m</td></tr>
-                        <tr><th>Pre-press Safety Factor</th>     <td class="text-right">{{prePressSafetyFactor}}</td><td>m²</td></tr>
-                        <tr><th>Total Pre-press Cost</th>        <td class="text-right">{{totPrePressCost}}</td><td></td></tr>
+                        <tr><th>Pre-press Material Cost</th>     <td class="text-right">{{rp prePressMatCost}}</td><td>per m²</td></tr>
+                        <tr><th>Pre-press Area per cylinder</th> <td class="text-right">{{prePressArea}}</td><td>m²</td></tr>
+                        <tr><th>Number of Die</th>               <td class="text-right">{{nDie}}</td><td></td></tr>
+                        <tr><th>Pre-press Safety Factor</th>     <td class="text-right">{{prePressSafetyFactor}}</td><td></td></tr>
+                        <tr><th>Total Pre-press Cost</th>        <td class="text-right">{{rp totPrePressCost}}</td><td></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -139,20 +139,16 @@
                 <table class="table table-hover table-condensed">
                     <tbody>
                         <tr><th>Material Type</th>  <td class="text-right">{{paperType}}</td><td></td></tr>
-                        <tr><th>Material Price</th> <td class="text-right">Rp. {{paperPrice}}</td><td>per m²</td></tr>
-                        <tr><th>Total</th>          <td class="text-right">Rp. {{totPaperPrice}}</td><td>per m²</td></tr>
+                        <tr><th>Material Price</th> <td class="text-right">{{rp paperPrice}}</td><td>per m²</td></tr>
+                        <tr><th>Total</th>          <td class="text-right">{{rp totPaperPrice}}</td><td>per m²</td></tr>
                     </tbody>
                 </table>
 
                 <h3>Ink</h3>
                 <table class="table table-hover table-condensed">
                     <tbody>
-                        <tr><th>Color 1</th><td></td><td></td></tr>
-                        <tr><th>Quantity</th> <td class="text-right">100 000?</td><td></td></tr>
-                        <tr><th>Cost</th>     <td class="text-right">Rp. 80 000?</td><td></td></tr>
-                        <tr><th>Color 2</th><td></td><td></td></tr>
-                        <tr><th>Quantity</th> <td class="text-right">100 000?</td><td></td></tr>
-                        <tr><th>Cost</th>     <td class="text-right">Rp. 80 000?</td><td></td></tr>
+                        <tr><th>Ratio Ink/Paper Cost</th> <td class="text-right">{{input.inkPaperCostPercent}}</td><td>%</td></tr>
+                        <tr><th>Ink Cost</th>             <td class="text-right">{{rp totInkCost}}</td><td></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -163,9 +159,7 @@
                 <h3>Order Quantity & Packaging</h3>
                 <table class="table table-hover table-condensed">
                     <tbody>
-                        <tr><th>Quantity</th>                   <td class="text-right">{{quantity}}</td><td>pieces</td></tr>
-                        <tr><th>Box</th>                        <td class="text-right">50?</td><td></td></tr>
-                        <tr><th>Total Paper Weight</th>         <td class="text-right">4?</td><td>kg</td></tr>
+                        <tr><th>Quantity</th>                   <td class="text-right">{{quantity}}</td><td>pcs</td></tr>
                         <tr><th>Total Finished Product Area</th><td class="text-right">{{totFinishedProdArea}}</td><td>m²</td></tr>
                     </tbody>
                 </table>
@@ -178,7 +172,7 @@
                         <tr><th>Configuration Width</th>    <td class="text-right">{{confWidth}}</td><td>m</td></tr>
                         <tr><th>Number of Operator</th>     <td class="text-right">{{nOperator}}</td><td></td></tr>
                         <tr><th>Operation Setup Time</th>   <td class="text-right">{{setupTime}}</td><td>jam</td></tr>
-                        <tr><th>Operator Cost</th>          <td class="text-right">Rp. {{operatorCost}}</td><td></td></tr>
+                        <tr><th>Operator Cost</th>          <td class="text-right">Rp. {{operatorCost}}</td><td>per jam</td></tr>
                         <tr><th>Efficiency Factor</th>      <td class="text-right">{{efficiencyFactor}}</td><td>%</td></tr>
                     </tbody>
                 </table>
@@ -187,9 +181,9 @@
                 <table class="table table-hover table-condensed">
                     <tbody>
                         <tr><th>Operator Waste Percent</th> <td class="text-right">{{operatorWastePerc}}</td><td>%</td></tr>
-                        <tr><th>Operator Waste</th>         <td class="text-right">{{operatorWaste}}</td><td></td></tr>
-                        <tr><th>Config Waste</th>           <td class="text-right">{{configWaste}}</td><td></td></tr>
-                        <tr><th>Config Waste Percent</th>   <td class="text-right">{{configWastePerc}}</td><td>%</td></tr>
+                        <tr><th>Operator Waste</th>         <td class="text-right">{{operatorWaste}}</td><td>m²/pc</td></tr>
+                        <tr><th>Config Waste</th>           <td class="text-right">{{configWaste}}</td><td>m²/pc</td></tr>
+                        <tr><th>Config Waste Percent</th>   <td class="text-right">{{configWastePerc}}</td><td>%/pc</td></tr>
                     </tbody>
                 </table>
 
