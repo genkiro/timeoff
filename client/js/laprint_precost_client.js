@@ -63,10 +63,78 @@ Template.settings.rendered = function () {
 Template.settings.helpers({
     settings: function () {
         return Settings.findOne({}, {sort: {timeCreated: -1}});
+    },
+    machines: function () {
+        return Machines.find({});
+    },
+    papers: function () {
+        return Papers.find({});
     }
 });
 
 Template.settings.events({
+    'click #addPaper': function (e) {
+        e.preventDefault();
+        Papers.insert({
+            name: $('#newPaperName').val(),
+            price: $('#newPaperPrice').val(),
+        }, function (err, result) {
+            if (err) {
+                var msg = "err: " + err;
+                console.log(msg);
+            } else {
+                $('#newPaperName').val('');
+                $('#newPaperPrice').val('');
+                alertify.success('Saved!');
+            }
+        })
+    },
+    'click .deletePaper': function (e) {
+        e.preventDefault();
+
+        var paperId = $(e.target).closest('tr').data('id');
+        var paper = Papers.findOne({_id: paperId });
+
+        alertify.confirm('Yakin mau hapus "' + paper.name + '" ?',
+            function () {
+                Papers.remove({_id: paperId}, function (err) { alertify.success('Terhapus'); });
+            },
+            function () { }
+        );
+    },
+    'click #addMachine': function (e) {
+        e.preventDefault();
+        Machines.insert({
+            name: $('#newMachineName').val(),
+            speed: $('#newMachineSpeed').val(),
+            setupTime: $('#newMachineSetupTime').val(),
+            nOperator: $('#newMachineNOperator').val()
+        }, function (err, result) {
+            if (err) {
+                var msg = "err: " + err;
+                console.log(msg);
+            } else {
+                $('#newMachineName').val('');
+                $('#newMachineSpeed').val('');
+                $('#newMachineSetupTime').val('');
+                $('#newMachineNOperator').val('');
+                alertify.success('Saved!');
+            }
+        })
+    },
+    'click .deleteMachine': function (e) {
+        e.preventDefault();
+
+        var machineId = $(e.target).closest('tr').data('id');
+        var machine = Machines.findOne({_id: machineId });
+
+        alertify.confirm('Yakin mau hapus "' + machine.name + '" ?',
+            function () {
+                Machines.remove({_id: machineId}, function (err) { alertify.success('Terhapus'); });
+            },
+            function () { }
+        );
+    },
     'submit form': function (e) {
         e.preventDefault();
 

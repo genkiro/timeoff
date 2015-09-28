@@ -140,7 +140,7 @@
                     <tbody>
                         <tr><th>Material Type</th>  <td class="text-right">{{paperType}}</td><td></td></tr>
                         <tr><th>Material Price</th> <td class="text-right">Rp. {{paperPrice}}</td><td>per m²</td></tr>
-                        <tr><th>Total</th>          <td class="text-right">Rp. {{totPaperPrice}}</td><td></td></tr>
+                        <tr><th>Total</th>          <td class="text-right">Rp. {{totPaperPrice}}</td><td>per m²</td></tr>
                     </tbody>
                 </table>
 
@@ -242,19 +242,20 @@
 
             <table class="table table-hover table-condensed">
                 <tbody>
-                    <tr><th>Paper Cost</th>        <td class="text-right">70</td><td></td><td>pieces</td></tr>
-                    <tr><th>Ink Cost</th>          <td class="text-right">50</td><td></td><td></td></tr>
+                    <tr><th>Paper Cost</th>        <td class="text-right">{{totPaperCost}}</td><td></td><td>pieces</td></tr>
+                    <tr><th>Ink Cost</th>          <td class="text-right">{{totInkCost}}</td><td></td><td></td></tr>
                 </tbody>
                 <tbody>
-                    <tr><th>Total Material Cost</th>                          <td></td><td class="text-right">4</td><td>kg</td></tr>
-                    <tr><th>Total Labor Cost</th>                             <td></td><td class="text-right">4</td><td>m²</td></tr>
-                    <tr><th>Total Overhead (only pre-press for now) Cost</th> <td></td><td class="text-right">4</td><td>m²</td></tr>
+                    <tr><th>Total Material Cost</th>                          <td></td><td class="text-right">{{totMatCost}}</td><td>kg</td></tr>
+                    <tr><th>Total Labor Cost</th>                             <td></td><td class="text-right">{{totLaborCost}}</td><td>m²</td></tr>
+                    <tr><th>Total Overhead (only pre-press for now) Cost</th> <td></td><td class="text-right">{{totOverheadCost}}</td><td>m²</td></tr>
+                    <tr><th>Total Cost</th>                                   <td></td><td class="text-right">{{totCost}}</td><td>m²</td></tr>
                 </tbody>
                 <tbody>
-                    <tr><th>Profit Margin</th>     <td class="text-right">70</td><td></td><td>pieces</td></tr>
-                    <tr><th>Profit</th>            <td class="text-right">50</td><td></td><td></td></tr>
-                    <tr><th>Total Profit</th>      <td></td><td class="text-right">4</td><td>kg</td></tr>
-                    <tr><th>Total Sales Price</th> <td></td><td class="text-right">4</td><td>m²</td></tr>
+                    <tr><th>Profit Margin</th>     <td class="text-right">{{profitMargin}}</td><td></td><td>pieces</td></tr>
+                    <tr><th>Profit</th>            <td class="text-right">{{profit}}</td><td></td><td></td></tr>
+                    <tr><th>Total Profit</th>      <td></td><td class="text-right">{{totProfit}}</td><td>kg</td></tr>
+                    <tr><th>Total Sales Price</th> <td></td><td class="text-right">{{totSalesPrice}}</td><td>m²</td></tr>
                 </tbody>
             </table>
         </div>

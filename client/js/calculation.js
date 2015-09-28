@@ -137,13 +137,13 @@ Template.calculation.helpers({
     paperType: function() {
         return this.input.paperType;
     },
-    /*paperPrice: function() {
-        // this should be a key value look up using the paper type
-        paperPrice.set(this.input.paperPrice);
+    paperPrice: function() {
+        paperPrice.set(this.paper.price);
         return paperPrice.get();
-    },*/
+    },
     totPaperPrice: function() {
-        return paperPrice.get();
+        totPaperPrice.set(paperPrice.get());
+        return totPaperPrice.get();
     },
 
     /* Reserved for Material (Ink) */
@@ -162,26 +162,22 @@ Template.calculation.helpers({
         totFinishedProdArea.set(quantity.get() * prodTotArea.get());
         return totFinishedProdArea.get();
     },
-
     machineName: function() {
         return this.input.machineName;
     },
     machineSpeed: function() {
-        // should be a key value lookup using machineName
-        machineSpeed.set(33);
+        machineSpeed.set(this.machine.speed);
         return machineSpeed.get();
     },
     confWidth: function() {
         return prodWidth.get();
     },
     nOperator: function() {
-        //nOperator.set(this.) // TODO
-        nOperator.set(2);
+        nOperator.set(this.machine.nOperator);
         return nOperator.get();
     },
     setupTime: function() {
-        // input TODO
-        setupTime.set(4);
+        setupTime.set(this.machine.setupTime);
         return setupTime.get();
     },
     operatorCost: function() {
@@ -197,7 +193,7 @@ Template.calculation.helpers({
         return operatorWastePerc.get();
     },
     operatorWaste: function() {
-        operatorWaste.set((configWaste.get() + prodTotArea.get()) / (1 - operatorWastePerc.get()) * operatorWastePerc.get());
+        operatorWaste.set((configWaste.get() + prodTotArea.get()) / (1 - operatorWastePerc.get()/100) * operatorWastePerc.get()/100);
         return operatorWaste.get();
     },
     configWaste: function() {
@@ -241,7 +237,11 @@ Template.calculation.helpers({
         return totLength.get();
     },
     totProdTime: function() {
-        totProdTime.set(1 / efficiencyFactor.get() * totLength.get() / machineSpeed.get() / 60 + setupTime.get());
+        // this is wrong because setupTime is a string.
+        console.log('first: ' + (1 / (efficiencyFactor.get()/100) * totLength.get() / machineSpeed.get() / 60));
+        console.log('setupTime: ' + setupTime.get());
+        console.log((1 / (efficiencyFactor.get()/100) * totLength.get() / machineSpeed.get() / 60) + setupTime.get());
+        totProdTime.set((1 / (efficiencyFactor.get()/100) * totLength.get() / machineSpeed.get() / 60) + setupTime.get());
         return totProdTime.get();
     },
     totManHour: function() {
@@ -251,20 +251,59 @@ Template.calculation.helpers({
     totColorCost: function() {
         totColorCost.set(this.input.inkPaperCostPercent * totManufacturingCost.get());
         return totColorCost.get();
+    },
+    totPaperCost: function() {
+        totPaperCost.set(totManufacturingArea.get() * totPaperPrice.get());
+        return totPaperCost.get();
+    },
+    totInkCost: function() {
+        totInkCost.set(totColorCost.get());
+        return totInkCost.get();
+    },
+    totMatCost: function() {
+        totMatCost.set(totPaperCost.get() + totInkCost.get());
+        return totMatCost.get();
+    },
+    totLaborCost: function() {
+        totLaborCost.set(totManHour.get() * operatorCost.get());
+        return totLaborCost.get();
+    },
+    totOverheadCost: function() {
+        totOverheadCost.set(totPrePressCost.get());
+        return totOverheadCost.get();
+    },
+    totCost: function() {
+        totCost.set(totMatCost.get() + totLaborCost.get() + totOverheadCost.get());
+        return totCost.get();
+    },
+    profitMargin: function() {
+        return b.get();
+    },
+    profit: function() {
+        profit.set(totCost.get() / (1-b.get()/100) * b.get()/100);
+        return profit.get();
+    },
+    totProfit: function() {
+        totProfit.set(profit.get());
+        return totProfit.get();
+    },
+    totSalesPrice: function() {
+        totSalesPrice.set(totCost.get() + totProfit.get());
+        return totSalesPrice.get();
     }
 
 
         /*
-        * var totConfigWaste = new Blaze.ReactiveVar();
-         var totOperatorWasteTarget = new Blaze.ReactiveVar();
-         var totManufacturingArea = new Blaze.ReactiveVar();
-         var totFinishedProdCost = new Blaze.ReactiveVar();
-         var totConfigWasteCost = new Blaze.ReactiveVar();
-         var totOperatorWasteCost = new Blaze.ReactiveVar();
-         var totManufacturingCost = new Blaze.ReactiveVar();
-         var totLength = new Blaze.ReactiveVar();
-         var totProdTime = new Blaze.ReactiveVar();
-         var totManHour = new Blaze.ReactiveVar();
-         var totColorCost = new Blaze.ReactiveVar();*/
+        *var totPaperCost = new Blaze.ReactiveVar();
+         var totInkCost = new Blaze.ReactiveVar();
+         var totMatCost = new Blaze.ReactiveVar();
+         var totLaborCost = new Blaze.ReactiveVar();
+         var totPrePressCost = new Blaze.ReactiveVar();
+         var totOverheadCost = new Blaze.ReactiveVar();
+         var totCost = new Blaze.ReactiveVar();
+         var profitMargin = new Blaze.ReactiveVar();
+         var profit = new Blaze.ReactiveVar();
+         var totProfit = new Blaze.ReactiveVar();
+         var totSalesPrice = new Blaze.ReactiveVar();*/
 
 });

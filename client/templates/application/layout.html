@@ -54,55 +54,107 @@
             <h1>Settings</h1>
             <p>This is where you can change the constants used when doing calculation. These values rarely change, therefore we'll save time on the input process by keeping it as constants.</p>
         </div>
-        <form class="form-horizontal">
-            <h3>Pre-press</h3>
-            <div class="form-group">
-                <label for="materialCost" class="col-sm-2 control-label">Pre-press Material Cost</label>
-                <div class="col-sm-3">
-                    <div class="input-group">
-                        <span class="input-group-addon">Rp.</span>
-                        <input type="text" class="form-control rupiah" id="materialCost" placeholder="1 500 000" value="{{settings.materialCost}}">
+            <div class="container col-sm-6">
+                <form class="form-horizontal">
+
+                    <h3>Pre-press</h3>
+                    <div class="form-group">
+                        <label for="materialCost" class="col-sm-4 control-label">Pre-press Material Cost</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Rp.</span>
+                                <input type="text" class="form-control rupiah" id="materialCost" placeholder="1 500 000" value="{{settings.materialCost}}">
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="safetyFactor" class="col-sm-2 control-label">Pre-press Safety Factor</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" id="safetyFactor" placeholder="2" value="{{settings.safetyFactor}}">
-                </div>
-            </div>
-            <h3>Manufacturing Process</h3>
-            <div class="form-group">
-                <label for="operatorCost" class="col-sm-2 control-label">Operator Cost</label>
-                <div class="col-sm-3">
-                    <div class="input-group">
-                        <span class="input-group-addon">Rp.</span>
-                        <input type="text" class="form-control rupiah" id="operatorCost" placeholder="13 000" value="{{settings.operatorCost}}">
+                    <div class="form-group">
+                        <label for="safetyFactor" class="col-sm-4 control-label">Pre-press Safety Factor</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="safetyFactor" placeholder="2" value="{{settings.safetyFactor}}">
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="efficiencyFactor" class="col-sm-2 control-label">Efficiency Factor</label>
-                <div class="col-sm-3">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="efficiencyFactor" placeholder="75" value="{{settings.efficiencyFactor}}">
-                        <span class="input-group-addon">%</span>
+                    <h3>Manufacturing Process</h3>
+                    <div class="form-group">
+                        <label for="operatorCost" class="col-sm-4 control-label">Operator Cost</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Rp.</span>
+                                <input type="text" class="form-control rupiah" id="operatorCost" placeholder="13 000" value="{{settings.operatorCost}}">
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <h3>Waste</h3>
-            <div class="form-group">
-                <label for="operatorWastePercent" class="col-sm-2 control-label">Operator Waste Percent</label>
-                <div class="col-sm-3">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="operatorWastePercent" placeholder="5" value="{{settings.operatorWastePercent}}">
-                        <span class="input-group-addon">%</span>
+                    <div class="form-group">
+                        <label for="efficiencyFactor" class="col-sm-4 control-label">Efficiency Factor</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="efficiencyFactor" placeholder="75" value="{{settings.efficiencyFactor}}">
+                                <span class="input-group-addon">%</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    <h3>Waste</h3>
+                    <div class="form-group">
+                        <label for="operatorWastePercent" class="col-sm-4 control-label">Operator Waste Percent</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="operatorWastePercent" placeholder="5" value="{{settings.operatorWastePercent}}">
+                                <span class="input-group-addon">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-info">Last updated: {{settings.timeCreated}}</p>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+
             </div>
-            <p class="text-info">Last updated: {{settings.timeCreated}}</p>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+            <div class="container col-sm-6">
+                <h3>Types of Machines</h3>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Speed</th>
+                            <th>Setup Time</th>
+                            <th># of Operator</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each machines}}
+                            <tr data-id="{{_id}}"><td>{{name}}</td><td>{{speed}}</td><td>{{setupTime}} jam</td><td>{{nOperator}}</td><td><button class="btn btn-danger btn-sm deleteMachine"><span class="glyphicon glyphicon-remove"></span></button></td></tr>
+                        {{/each}}
+                        <tr>
+                            <td><input type="text" id="newMachineName" class="form-control" placeholder="Rotary"></td>
+                            <td><input type="text" id="newMachineSpeed" class="form-control number" placeholder="5"></td>
+                            <td><input type="text" id="newMachineSetupTime" class="form-control number" placeholder="4"></td>
+                            <td><input type="text" id="newMachineNOperator" class="form-control number" placeholder="2"></td>
+                            <td><button class="btn btn-primary btn-sm" id="addMachine"><span class="glyphicon glyphicon-plus"></span></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Types of Papers</h3>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each papers}}
+                            <tr data-id="{{_id}}"><td>{{name}}</td><td>Rp. {{price}}</td><td><button class="btn btn-danger btn-sm deletePaper"><span class="glyphicon glyphicon-remove"></span></button></td></tr>
+                        {{/each}}
+                        <tr>
+                            <td><input type="text" id="newPaperName" class="form-control" placeholder="Stc Transparant"></td>
+                            <td><input type="text" id="newPaperPrice" class="form-control number" placeholder="4981"></td>
+                            <td><button class="btn btn-primary btn-sm" id="addPaper"><span class="glyphicon glyphicon-plus"></span></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         &nbsp;
     </div>
 </template>
