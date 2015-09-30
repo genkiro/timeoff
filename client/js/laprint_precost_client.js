@@ -22,7 +22,11 @@ numeral.language('id');
 
 $.each({
     rp: function (n) {
+        if (!n) { return; }
         return numeral(n).format('$ 0,0[.]00');
+    },
+    perc: function (o) {
+        return (o.hash.nominator * 100 / o.hash.denominator) + ' %';
     }
 }, function ( name, handler ) {
     Handlebars.registerHelper( name, handler );

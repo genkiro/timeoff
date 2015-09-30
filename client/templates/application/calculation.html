@@ -3,7 +3,7 @@
 <template name="calculation">
     <div class="container">
         <div class="jumbotron">
-            <h1>Calculation {{b}} {{a}}</h1>
+            <h1>Calculation</h1>
             <p>Order Name: {{input.customer}}</p>
             <p>Order Date: {{input.entryDate}}</p>
             <p>Settings:
@@ -46,16 +46,7 @@
                         <label for="targetProfitMargin" class="col-sm-3 control-label">Target Profit Margin</label>
                         <div class="col-sm-6">
                             <div class="input-group">
-                                <input type="text" class="form-control number" id="targetProfitMargin" placeholder="23" value="{{b}}">
-                                <span class="input-group-addon">%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="playground" class="col-sm-3 control-label">Playground</label>
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                                <input type="text" class="form-control number" id="playground" placeholder="23" value="{{b}}">
+                                <input type="number" class="form-control" id="targetProfitMargin" placeholder="23" value="{{targetProfitMargin}}">
                                 <span class="input-group-addon">%</span>
                             </div>
                         </div>
@@ -65,21 +56,22 @@
             <div class="container col-sm-6">
                 <form class="form-horizontal">
                     <h3>Output</h3>
+                    <p class="text-muted">(click outside to recalculate)</p>
                     <div class="form-group">
                         <label for="salesPricePerPiece" class="col-sm-3 control-label">Sales Price (piece)</label>
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">Rp.</span>
-                                <input type="text" class="form-control number" id="salesPricePerPiece" placeholder="118.94" value="{{a}}">
+                                <input type="text" class="form-control number" id="salesPricePerPiece" placeholder="118.94" value="{{totSalesPricePerPiece}}">
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="netProfit" class="col-sm-3 control-label">Net Profit</label>
+                        <label for="totalNetProfit" class="col-sm-3 control-label">Total Net Profit</label>
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">Rp.</span>
-                                <input type="text" class="form-control number" id="netProfit" placeholder="2 333 444.98">
+                                <input type="text" class="form-control number" id="totalNetProfit" placeholder="2 333 444.98" value="{{totProfit}}">
                             </div>
                         </div>
                     </div>
@@ -88,12 +80,87 @@
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">Rp.</span>
-                                <input type="text" class="form-control number" id="totalSales" placeholder="56 789 000">
+                                <input type="text" class="form-control number" id="totalSales" placeholder="56 789 000" value="{{totSalesPrice}}">
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
+        </div>
+
+        <div class="container col-md-10 text-center">
+            <h1>Pre-costing Breakdown Total</h1>
+
+            <table class="table table-hover table-condensed">
+                <tbody>
+                    <tr><th>Paper Cost</th>        <td class="text-right">{{rp totPaperCost}}</td><td></td><td></td><td></td></tr>
+                    <tr><th>Ink Cost</th>          <td class="text-right">{{rp totInkCost}}</td><td></td><td></td><td></td></tr>
+                </tbody>
+                <tbody>
+                    <tr><th>Total Material Cost</th>                          <td></td><td class="text-right">{{rp totMatCost}}</td><td></td><td></td></tr>
+                    <tr><th>Total Labor Cost</th>                             <td></td><td class="text-right">{{rp totLaborCost}}</td><td></td><td></td></tr>
+                    <tr><th>Total Overhead (only pre-press for now) Cost</th> <td></td><td class="text-right">{{rp totOverheadCost}}</td><td></td><td></td></tr>
+                </tbody>
+                <tbody>
+                    <tr><th>Total Cost</th>        <td></td><td></td><td class="text-right">{{rp totCost}}</td><td></td></tr>
+                    <tr><th>Profit Margin</th>     <td></td><td></td><td class="text-right">{{profitMargin}}</td><td>%</td></tr>
+                    <tr><th>Profit</th>            <td></td><td></td><td class="text-right">{{rp profit}}</td><td></td></tr>
+                    <tr><th>Total Profit</th>      <td></td><td></td><td class="text-right">{{rp totProfit}}</td><td></td></tr>
+                </tbody>
+                <tbody>
+                    <tr><th>Total Sales Price</th> <td></td><td></td><td class="text-right">{{rp totSalesPrice}}</td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="container col-md-10 text-center">
+            <h1>Pre-costing Breakdown Per Piece</h1>
+
+            <table class="table table-hover table-condensed">
+                <tbody>
+                    <tr><th>Paper Cost</th>        <td class="text-right">{{rp totPaperCostPerPiece}}</td><td></td><td></td><td></td><td></td></tr>
+                    <tr><th>Ink Cost</th>          <td class="text-right">{{rp totInkCostPerPiece}}</td><td></td><td></td><td></td><td></td></tr>
+                </tbody>
+                <tbody>
+                    <tr><th>Total Material Cost</th>                          <td></td><td class="text-right">{{rp totMatCostPerPiece}}</td><td></td><td></td><td></td></tr>
+                    <tr><th>Total Labor Cost</th>                             <td></td><td class="text-right">{{rp totLaborCostPerPiece}}</td><td></td><td></td><td></td></tr>
+                    <tr><th>Total Overhead (only pre-press for now) Cost</th> <td></td><td class="text-right">{{rp totOverheadCostPerPiece}}</td><td></td><td></td><td></td></tr>
+                </tbody>
+                <tbody>
+                    <tr><th>Total Cost</th>        <td></td><td></td><td class="text-right">{{rp totCostPerPiece}}</td><td></td><td></td></tr>
+                    <tr><th>Profit Margin</th>     <td></td><td></td><td class="text-right">{{profitMargin}}</td><td>%</td><td></td></tr>
+                    <tr><th>Profit</th>            <td></td><td></td><td class="text-right">{{rp profitPerPiece}}</td><td></td><td></td></tr>
+                    <tr><th>Total Profit</th>      <td></td><td></td><td class="text-right">{{rp totProfitPerPiece}}</td><td></td><td></td></tr>
+                </tbody>
+                <tbody>
+                    <tr><th>Total Sales Price</th> <td></td><td></td><td class="text-right">{{rp totSalesPricePerPiece}}</td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="container col-md-10 text-center">
+            <h1>Pre-costing Breakdown Per m²</h1>
+
+            <table class="table table-hover table-condensed">
+                <tbody>
+                    <tr><th>Paper Cost</th>        <td class="text-right">{{rp totPaperCostPerM2}}</td><td></td><td></td><td></td></tr>
+                    <tr><th>Ink Cost</th>          <td class="text-right">{{rp totInkCostPerM2}}</td><td></td><td></td><td></td></tr>
+                </tbody>
+                <tbody>
+                    <tr><th>Total Material Cost</th>                          <td></td><td class="text-right">{{rp totMatCostPerM2}}</td><td></td><td></td></tr>
+                    <tr><th>Total Labor Cost</th>                             <td></td><td class="text-right">{{rp totLaborCostPerM2}}</td><td></td><td></td></tr>
+                    <tr><th>Total Overhead (only pre-press for now) Cost</th> <td></td><td class="text-right">{{rp totOverheadCostPerM2}}</td><td></td><td></td></tr>
+                </tbody>
+                <tbody>
+                    <tr><th>Total Cost</th>        <td></td><td></td><td class="text-right">{{rp totCostPerM2}}</td><td></td></tr>
+                    <tr><th>Profit Margin</th>     <td></td><td></td><td class="text-right">{{profitMargin}}</td><td>%</td></tr>
+                    <tr><th>Profit</th>            <td></td><td></td><td class="text-right">{{rp profitPerM2}}</td><td></td></tr>
+                    <tr><th>Total Profit</th>      <td></td><td></td><td class="text-right">{{rp totProfitPerM2}}</td><td></td></tr>
+                </tbody>
+                <tbody>
+                    <tr><th>Total Sales Price</th> <td></td><td></td><td class="text-right">{{rp totSalesPricePerM2}}</td><td></td></tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="container">
@@ -172,7 +239,7 @@
                         <tr><th>Configuration Width</th>    <td class="text-right">{{confWidth}}</td><td>m</td></tr>
                         <tr><th>Number of Operator</th>     <td class="text-right">{{nOperator}}</td><td></td></tr>
                         <tr><th>Operation Setup Time</th>   <td class="text-right">{{setupTime}}</td><td>jam</td></tr>
-                        <tr><th>Operator Cost</th>          <td class="text-right">Rp. {{operatorCost}}</td><td>per jam</td></tr>
+                        <tr><th>Operator Cost</th>          <td class="text-right">{{rp operatorCost}}</td><td>per jam</td></tr>
                         <tr><th>Efficiency Factor</th>      <td class="text-right">{{efficiencyFactor}}</td><td>%</td></tr>
                     </tbody>
                 </table>
@@ -183,7 +250,7 @@
                         <tr><th>Operator Waste Percent</th> <td class="text-right">{{operatorWastePerc}}</td><td>%</td></tr>
                         <tr><th>Operator Waste</th>         <td class="text-right">{{operatorWaste}}</td><td>m²/pc</td></tr>
                         <tr><th>Config Waste</th>           <td class="text-right">{{configWaste}}</td><td>m²/pc</td></tr>
-                        <tr><th>Config Waste Percent</th>   <td class="text-right">{{configWastePerc}}</td><td>%/pc</td></tr>
+                        <tr><th>Config Waste Percent</th>   <td class="info text-right">{{configWastePerc}}</td><td>%/pc</td></tr>
                     </tbody>
                 </table>
 
@@ -196,108 +263,44 @@
             <h3>Paper Area</h3>
             <table class="table table-hover table-condensed">
                 <tbody>
-                    <tr><th>Total Finished Product Area</th> <td class="text-right">{{totFinishedProdArea}}</td><td></td><td>pieces</td></tr>
-                    <tr><th>Total Config Waste</th>          <td class="text-right">{{totConfigWaste}}</td><td></td><td></td></tr>
-                    <tr><th>Total Operator Waste Target</th> <td class="text-right">{{totOperatorWasteTarget}}</td><td></td><td>kg</td></tr>
-                    <tr><th>Total Manufacturing Area</th>    <td></td><td class="text-right">{{totManufacturingArea}}</td><td>m²</td></tr>
+                    <tr><th>Total Finished Product Area</th> <td class="text-right">{{totFinishedProdArea}}</td><td></td><td>m²</td><td class="info">{{perc nominator=totFinishedProdArea denominator=totManufacturingArea}}</td></tr>
+                    <tr><th>Total Config Waste</th>          <td class="text-right">{{totConfigWaste}}</td><td></td><td>m²</td><td class="info">{{perc nominator=totConfigWaste denominator=totManufacturingArea}}</td></tr>
+                    <tr><th>Total Operator Waste Target</th> <td class="text-right">{{totOperatorWasteTarget}}</td><td></td><td>m²</td><td class="info">{{perc nominator=totOperatorWasteTarget denominator=totManufacturingArea}}</td></tr>
+                </tbody>
+                <tbody>
+                    <tr><th>Total Manufacturing Area</th>    <td></td><td class="text-right">{{totManufacturingArea}}</td><td>m²</td><td class="info">100 %</td></tr>
                 </tbody>
             </table>
 
             <h3>Paper Cost</h3>
             <table class="table table-hover table-condensed">
                 <tbody>
-                    <tr><th>Total Finished Product Cost</th> <td class="text-right">{{totFinishedProdCost}}</td><td></td><td>pieces</td></tr>
-                    <tr><th>Total Config Waste Cost</th>     <td class="text-right">{{totConfigWasteCost}}</td><td></td><td></td></tr>
-                    <tr><th>Total Operator Waste Cost</th>   <td class="text-right">{{totOperatorWasteCost}}</td><td></td><td>kg</td></tr>
-                    <tr><th>Total Manufacturing Cost</th>    <td></td><td class="text-right">{{totManufacturingCost}}</td><td>m²</td></tr>
+                    <tr><th>Total Finished Product Cost</th> <td class="text-right">{{rp totFinishedProdCost}}</td><td></td><td>{{perc nominator=totFinishedProdCost denominator=totManufacturingCost}}</td></tr>
+                    <tr><th>Total Config Waste Cost</th>     <td class="text-right">{{rp totConfigWasteCost}}</td><td></td><td>{{perc nominator=totConfigWasteCost denominator=totManufacturingCost}}</td></tr>
+                    <tr><th>Total Operator Waste Cost</th>   <td class="text-right">{{rp totOperatorWasteCost}}</td><td></td><td>{{perc nominator=totOperatorWasteCost denominator=totManufacturingCost}}</td></tr>
+                </tbody>
+                <tbody>
+                    <tr><th>Total Manufacturing Cost</th>    <td></td><td class="text-right">{{rp totManufacturingCost}}</td><td>100 %</td></tr>
                 </tbody>
             </table>
 
             <h3>Manufacturing</h3>
             <table class="table table-hover table-condensed">
                 <tbody>
-                    <tr><th>Total Length</th>           <td class="text-right">{{totLength}}</td><td></td><td>pieces</td></tr>
-                    <tr><th>Total Production Time</th>  <td class="text-right">{{totProdTime}}</td><td></td><td></td></tr>
-                    <tr><th>Total Man Hour</th>         <td class="text-right">{{totManHour}}</td><td></td><td>kg</td></tr>
+                    <tr><th>Total Length</th>           <td class="info text-right">{{totLength}}</td><td></td><td>m</td></tr>
+                    <tr><th>Total Production Time</th>  <td class="info text-right">{{totProdTime}}</td><td></td><td>hrs</td></tr>
+                    <tr><th>Total Man Hour</th>         <td class="info text-right">{{totManHour}}</td><td></td><td>hrs</td></tr>
                 </tbody>
             </table>
 
             <h3>Ink</h3>
             <table class="table table-hover table-condensed">
                 <tbody>
-                    <tr><th>Total Color Cost</th> <td class="text-right">{{totColorCost}}</td><td></td><td>pieces</td></tr>
+                    <tr><th>Total Color Cost</th> <td class="text-right">{{rp totColorCost}}</td><td></td><td></td></tr>
                 </tbody>
             </table>
 
         </div>
-
-        <div class="container col-md-8 text-center">
-            <h1>Pre-costing Breakdown Total</h1>
-
-            <table class="table table-hover table-condensed">
-                <tbody>
-                    <tr><th>Paper Cost</th>        <td class="text-right">{{totPaperCost}}</td><td></td><td>pieces</td></tr>
-                    <tr><th>Ink Cost</th>          <td class="text-right">{{totInkCost}}</td><td></td><td></td></tr>
-                </tbody>
-                <tbody>
-                    <tr><th>Total Material Cost</th>                          <td></td><td class="text-right">{{totMatCost}}</td><td>kg</td></tr>
-                    <tr><th>Total Labor Cost</th>                             <td></td><td class="text-right">{{totLaborCost}}</td><td>m²</td></tr>
-                    <tr><th>Total Overhead (only pre-press for now) Cost</th> <td></td><td class="text-right">{{totOverheadCost}}</td><td>m²</td></tr>
-                    <tr><th>Total Cost</th>                                   <td></td><td class="text-right">{{totCost}}</td><td>m²</td></tr>
-                </tbody>
-                <tbody>
-                    <tr><th>Profit Margin</th>     <td class="text-right">{{profitMargin}}</td><td></td><td>pieces</td></tr>
-                    <tr><th>Profit</th>            <td class="text-right">{{profit}}</td><td></td><td></td></tr>
-                    <tr><th>Total Profit</th>      <td></td><td class="text-right">{{totProfit}}</td><td>kg</td></tr>
-                    <tr><th>Total Sales Price</th> <td></td><td class="text-right">{{totSalesPrice}}</td><td>m²</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="container col-md-8 text-center">
-            <h1>Pre-costing Breakdown By Per Piece</h1>
-
-            <table class="table table-hover table-condensed">
-                <tbody>
-                <tr><th>Paper Cost</th>        <td class="text-right">70</td><td></td><td>pieces</td></tr>
-                <tr><th>Ink Cost</th>          <td class="text-right">50</td><td></td><td></td></tr>
-                </tbody>
-                <tbody>
-                <tr><th>Total Material Cost</th>                          <td></td><td class="text-right">4</td><td>kg</td></tr>
-                <tr><th>Total Labor Cost</th>                             <td></td><td class="text-right">4</td><td>m²</td></tr>
-                <tr><th>Total Overhead (only pre-press for now) Cost</th> <td></td><td class="text-right">4</td><td>m²</td></tr>
-                </tbody>
-                <tbody>
-                <tr><th>Profit Margin</th>     <td class="text-right">70</td><td></td><td>pieces</td></tr>
-                <tr><th>Profit</th>            <td class="text-right">50</td><td></td><td></td></tr>
-                <tr><th>Total Profit</th>      <td></td><td class="text-right">4</td><td>kg</td></tr>
-                <tr><th>Total Sales Price</th> <td></td><td class="text-right">4</td><td>m²</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="container col-md-8 text-center">
-            <h1>Pre-costing Breakdown By m²</h1>
-
-            <table class="table table-hover table-condensed">
-                <tbody>
-                <tr><th>Paper Cost</th>        <td class="text-right">70</td><td></td><td>pieces</td></tr>
-                <tr><th>Ink Cost</th>          <td class="text-right">50</td><td></td><td></td></tr>
-                </tbody>
-                <tbody>
-                <tr><th>Total Material Cost</th>                          <td></td><td class="text-right">4</td><td>kg</td></tr>
-                <tr><th>Total Labor Cost</th>                             <td></td><td class="text-right">4</td><td>m²</td></tr>
-                <tr><th>Total Overhead (only pre-press for now) Cost</th> <td></td><td class="text-right">4</td><td>m²</td></tr>
-                </tbody>
-                <tbody>
-                <tr><th>Profit Margin</th>     <td class="text-right">70</td><td></td><td>pieces</td></tr>
-                <tr><th>Profit</th>            <td class="text-right">50</td><td></td><td></td></tr>
-                <tr><th>Total Profit</th>      <td></td><td class="text-right">4</td><td>kg</td></tr>
-                <tr><th>Total Sales Price</th> <td></td><td class="text-right">4</td><td>m²</td></tr>
-                </tbody>
-            </table>
-        </div>
-
 
     </div>
 </template>
