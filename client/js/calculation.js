@@ -1,10 +1,9 @@
-var targetProfitMargin = new Blaze.ReactiveVar(23);
+var targetProfitMargin = new Blaze.ReactiveVar(30);
 
 var orderName = new Blaze.ReactiveVar();
 var prodLength = new Blaze.ReactiveVar();
 var prodWidth = new Blaze.ReactiveVar();
 var prodTotArea = new Blaze.ReactiveVar();
-var cylDiameter = new Blaze.ReactiveVar();
 var dieLength = new Blaze.ReactiveVar();
 var dieWidth = new Blaze.ReactiveVar();
 var totDieArea = new Blaze.ReactiveVar();
@@ -18,12 +17,9 @@ var paperType = new Blaze.ReactiveVar();
 var paperPrice = new Blaze.ReactiveVar();
 var totPaperPrice = new Blaze.ReactiveVar();
 var quantity = new Blaze.ReactiveVar();
-var box = new Blaze.ReactiveVar();
-var totPaperWeight = new Blaze.ReactiveVar();
 var totFinishedProdArea = new Blaze.ReactiveVar();
 var machineName = new Blaze.ReactiveVar();
 var machineSpeed = new Blaze.ReactiveVar();
-var confWidth = new Blaze.ReactiveVar();
 var nOperator = new Blaze.ReactiveVar();
 var setupTime = new Blaze.ReactiveVar();
 var operatorCost = new Blaze.ReactiveVar();
@@ -51,7 +47,6 @@ var totMatCost = new Blaze.ReactiveVar();
 var totLaborCost = new Blaze.ReactiveVar();
 var totOverheadCost = new Blaze.ReactiveVar();
 var totCost = new Blaze.ReactiveVar();
-var profitMargin = new Blaze.ReactiveVar();
 var profit = new Blaze.ReactiveVar();
 var totProfit = new Blaze.ReactiveVar();
 var totSalesPrice = new Blaze.ReactiveVar();
@@ -76,13 +71,41 @@ var profitPerM2 = new Blaze.ReactiveVar();
 var totProfitPerM2 = new Blaze.ReactiveVar();
 var totSalesPricePerM2 = new Blaze.ReactiveVar();
 
-
-
 Template.calculation.rendered = function () {
     $('.number').inputmask("decimal", { autoGroup: true, groupSeparator: " ", groupSize: 3 });
 };
 
 Template.calculation.events({
+    'click #saveToOuput': function(e) {
+        e.preventDefault();
+        Inputs.insert({
+            //TODO
+            /*customer: e.target.customer.value,
+            entryDate: $(e.target.entryDate).datepicker('getDate'),
+            itemCode: e.target.itemCode.value,
+            orderName: e.target.orderName.value,
+            quantity: Number($(e.target.quantity).inputmask('unmaskedvalue')),
+            designAge: $('input[name="designAge"]:checked').val(),
+            prodLength: Number($(e.target.prodLength).inputmask('unmaskedvalue')),
+            prodWidth: Number($(e.target.prodWidth).inputmask('unmaskedvalue')),
+            paperType: e.target.paperType.value,
+            dieLength: Number($(e.target.dieLength).inputmask('unmaskedvalue')),
+            dieWidth: Number($(e.target.dieWidth).inputmask('unmaskedvalue')),
+            totalPiecesInDie: Number($(e.target.totalPiecesInDie).inputmask('unmaskedvalue')),
+            nDieColor: Number($(e.target.nDieColor).inputmask('unmaskedvalue')),
+            machineName: e.target.machineName.value,
+            inkPaperCostPercent: Number($(e.target.inkPaperCostPercent).inputmask('unmaskedvalue'))*/
+        }, function (err, result) {
+            if (err) {
+                var msg = "err: " + err;
+                console.log(msg);
+            } else {
+                Router.go('output');
+                alertify.success('Saved!');
+            }
+        });
+
+    },
     'submit form': function (e) {
         e.preventDefault();
     },

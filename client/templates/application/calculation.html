@@ -46,7 +46,7 @@
                         <label for="targetProfitMargin" class="col-sm-3 control-label">Target Profit Margin</label>
                         <div class="col-sm-6">
                             <div class="input-group">
-                                <input type="number" class="form-control" id="targetProfitMargin" placeholder="23" value="{{targetProfitMargin}}">
+                                <input type="number" class="form-control" id="targetProfitMargin" placeholder="23" value="{{targetProfitMargin}}" tabindex="0">
                                 <span class="input-group-addon">%</span>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">Rp.</span>
-                                <input type="text" class="form-control number" id="salesPricePerPiece" placeholder="118.94" value="{{totSalesPricePerPiece}}">
+                                <input type="text" class="form-control number" id="salesPricePerPiece" placeholder="118.94" value="{{totSalesPricePerPiece}}" tabindex="0">
                             </div>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">Rp.</span>
-                                <input type="text" class="form-control number" id="totalNetProfit" placeholder="2 333 444.98" value="{{totProfit}}">
+                                <input type="text" class="form-control number" id="totalNetProfit" placeholder="2 333 444.98" value="{{totProfit}}" tabindex="0">
                             </div>
                         </div>
                     </div>
@@ -80,12 +80,15 @@
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">Rp.</span>
-                                <input type="text" class="form-control number" id="totalSales" placeholder="56 789 000" value="{{totSalesPrice}}">
+                                <input type="text" class="form-control number" id="totalSales" placeholder="56 789 000" value="{{totSalesPrice}}" tabindex="0">
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
+        </div>
+        <div class="container">
+            <button class="btn btn-primary" tabindex="0" id="saveToOutput">Save to Output</button>
         </div>
 
         <div class="container col-md-10 text-center">

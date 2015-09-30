@@ -4,18 +4,18 @@
 
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="#" tabindex="-1">
                     <img alt="LaPrint Precost" src="favicon.ico" width="20em" height="20em">
                 </a>
                 {{> burgerMenuIcon}}
-                <a class="navbar-brand" href="{{pathFor 'homepage'}}">LaPrint Precost</a>
+                <a class="navbar-brand" href="{{pathFor 'homepage'}}" tabindex="-1">LaPrint Precost</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{pathFor 'settings'}}">Settings</a></li>
-                    <li><a href="{{pathFor 'inputList'}}">Input</a></li>
+                    <li><a href="{{pathFor 'settings'}}" tabindex="-1">Settings</a></li>
+                    <li><a href="{{pathFor 'inputList'}}" tabindex="-1">Input</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {{> loginButtons}}
@@ -38,7 +38,8 @@
 <template name="homepage">
     <div class="container">
         {{#if currentUser}}
-            Do what you have to do
+            <a href="{{pathFor 'settings'}}" class="btn btn-default btn-lg" role="button" style="margin-bottom: 0.5em;"><span class="glyphicon glyphicon-wrench" style="font-size: 2em;"></span><h3>Settings</h3></a>
+            <a href="{{pathFor 'inputList'}}" class="btn btn-default btn-lg" role="button" style="margin-bottom: 0.5em;"><span class="glyphicon glyphicon-import" style="font-size: 2em;"></span><h3>Input</h3></a>
         {{else}}
             <div class="jumbotron">
                 <h1>You're not logged in!</h1>
@@ -375,4 +376,8 @@
         &nbsp;
 
     </div>
+</template>
+
+<template name="output">
+    <div class="container">Output page.</div>
 </template>
