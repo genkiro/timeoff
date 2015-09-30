@@ -76,25 +76,30 @@ Template.calculation.rendered = function () {
 };
 
 Template.calculation.events({
-    'click #saveToOuput': function(e) {
+    'click #saveToOutput': function(e) {
         e.preventDefault();
-        Inputs.insert({
+        Outputs.insert({
             //TODO
-            /*customer: e.target.customer.value,
-            entryDate: $(e.target.entryDate).datepicker('getDate'),
-            itemCode: e.target.itemCode.value,
-            orderName: e.target.orderName.value,
-            quantity: Number($(e.target.quantity).inputmask('unmaskedvalue')),
-            designAge: $('input[name="designAge"]:checked').val(),
-            prodLength: Number($(e.target.prodLength).inputmask('unmaskedvalue')),
-            prodWidth: Number($(e.target.prodWidth).inputmask('unmaskedvalue')),
-            paperType: e.target.paperType.value,
-            dieLength: Number($(e.target.dieLength).inputmask('unmaskedvalue')),
-            dieWidth: Number($(e.target.dieWidth).inputmask('unmaskedvalue')),
-            totalPiecesInDie: Number($(e.target.totalPiecesInDie).inputmask('unmaskedvalue')),
-            nDieColor: Number($(e.target.nDieColor).inputmask('unmaskedvalue')),
-            machineName: e.target.machineName.value,
-            inkPaperCostPercent: Number($(e.target.inkPaperCostPercent).inputmask('unmaskedvalue'))*/
+            customer: this.input.customer,
+            entryDate: this.input.entryDate,
+            itemCode: this.input.itemCode,
+            orderName: this.input.orderName,
+            quantity: this.input.quantity,
+            designAge: this.input.designAge,
+            prodLength: this.input.prodLength,
+            prodWidth: this.input.prodWidth,
+            paperType: this.input.paperType,
+            paperPrice: 2333333,
+            dieLength: this.input.dieLength,
+            dieWidth: this.input.dieWidth,
+            totalPiecesInDie: this.input.totalPiecesInDie,
+            nDieColor: this.input.nDieColor,
+            machineName: this.input.machineName,
+            machineSpeed: 777777,
+            setupTime: 88888,
+            nOperator: 7,
+
+            inkPaperCostPercent: this.input.inkPaperCostPercent
         }, function (err, result) {
             if (err) {
                 var msg = "err: " + err;
