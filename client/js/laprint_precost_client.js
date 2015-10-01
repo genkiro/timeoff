@@ -51,6 +51,30 @@ Template.inputCreate.rendered = function() {
 
     $('.integer').inputmask("integer", { autoGroup: true, groupSeparator: " ", groupSize: 3 });
     $('.decimal').inputmask("decimal", { autoGroup: true, groupSeparator: " ", radixPoint: ".", groupSize: 3 });
+
+    $('#paperType').typeahead({
+        source: function() {
+            var arr = [];
+            Papers.find({}).forEach(function (x) { arr.push(x.name); });
+            return arr;
+        },
+        autoSelect: true
+    });
+
+    $('#machineName').typeahead({
+        source: function() {
+            var arr = [];
+            Machines.find({}).forEach(function (x) { arr.push(x.name); });
+            return arr;
+        },
+        autoSelect: true
+    });
+};
+
+var retrieveItemNames = function () {
+    var arr = [];
+    Items.find({}).forEach(function (x) { arr.push(x.name); });
+    return arr;
 };
 
 Template.inputCreate.events({
@@ -72,7 +96,8 @@ Template.inputCreate.events({
             totalPiecesInDie: Number($(e.target.totalPiecesInDie).inputmask('unmaskedvalue')),
             nDieColor: Number($(e.target.nDieColor).inputmask('unmaskedvalue')),
             machineName: e.target.machineName.value,
-            inkPaperCostPercent: Number($(e.target.inkPaperCostPercent).inputmask('unmaskedvalue'))
+            inkPaperCostPercent: Number($(e.target.inkPaperCostPercent).inputmask('unmaskedvalue')),
+            isProcessed: false
         }, function (err, result) {
             if (err) {
                 var msg = "err: " + err;
@@ -87,7 +112,7 @@ Template.inputCreate.events({
 
 Template.inputList.helpers({
     inputs: function () {
-        return Inputs.find({}, { sort: { entryDate: 1 }});
+        return Inputs.find({ isProcessed: false }, { sort: { entryDate: 1 }});
     }
 });
 

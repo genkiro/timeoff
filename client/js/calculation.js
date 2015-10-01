@@ -78,7 +78,11 @@ Template.calculation.rendered = function () {
 Template.calculation.events({
     'click #saveToOutput': function(e) {
         e.preventDefault();
+
+        Inputs.update({ _id: this.input_id }, { $set: { isProcessed: true }});
+
         Outputs.insert({
+            input_id: this.input_id,
             customer: this.input.customer,
             entryDate: this.input.entryDate,
             itemCode: this.input.itemCode,
