@@ -79,7 +79,6 @@ Template.calculation.events({
     'click #saveToOutput': function(e) {
         e.preventDefault();
         Outputs.insert({
-            //TODO
             customer: this.input.customer,
             entryDate: this.input.entryDate,
             itemCode: this.input.itemCode,
@@ -89,17 +88,21 @@ Template.calculation.events({
             prodLength: this.input.prodLength,
             prodWidth: this.input.prodWidth,
             paperType: this.input.paperType,
-            paperPrice: 2333333,
+            paperPrice: this.paper.price,
             dieLength: this.input.dieLength,
             dieWidth: this.input.dieWidth,
             totalPiecesInDie: this.input.totalPiecesInDie,
             nDieColor: this.input.nDieColor,
             machineName: this.input.machineName,
-            machineSpeed: 777777,
-            setupTime: 88888,
-            nOperator: 7,
-
-            inkPaperCostPercent: this.input.inkPaperCostPercent
+            machineSpeed: this.machine.speed,
+            setupTime: this.machine.setupTime,
+            nOperator: this.machine.nOperator,
+            totCostPerPiece: totCostPerPiece.get(),
+            profitMarginOffered: targetProfitMargin.get(),
+            pricePerPieceOffered: totSalesPricePerPiece.get(),
+            totSalesPricePerPiece: totSalesPricePerPiece.get(),
+            totSalesPrice: totSalesPrice.get(),
+            totProfit: totProfit.get()
         }, function (err, result) {
             if (err) {
                 var msg = "err: " + err;

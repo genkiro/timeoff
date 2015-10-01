@@ -187,3 +187,9 @@ Template.settings.events({
         });
     }
 });
+
+Template.output.helpers({
+    outputs: function() {
+        return Outputs.find({});
+    }
+});

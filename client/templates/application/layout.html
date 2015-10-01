@@ -379,5 +379,93 @@
 </template>
 
 <template name="output">
-    <div class="container">Output page.</div>
+    <div class="container">
+        <table class="table table-responsive table-hover">
+            <thead>
+            <tr>
+                <th>_id</th>
+                <th>Customer</th>
+                <th>Entry Date</th>
+                <th>Kode Barang</th>
+                <th>Order Name</th>
+                <th>Quantity</th>
+                <th>Design Baru/Lama</th>
+                <th>Product Length</th>
+                <th>Product Width</th>
+                <th>Paper Type</th>
+                <th>Paper Price</th>
+                <th>Die Length</th>
+                <th>Die Width</th>
+                <th>Total Pieces In 1 Die</th>
+                <th>Number of Color (die)</th>
+                <th>Machine Name</th>
+                <th>Machine Speed</th>
+                <th>Setup Time</th>
+                <th>Number of Operator</th>
+                <th>HPP</th>
+                <th>Offer Profit Margin</th>
+                <th>Offer Price (per piece)</th>
+                <th>Total Sales Price</th>
+                <th>Total Profit</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each outputs}}
+                <tr>
+                    <td>{{_id}}</td>
+                    <td>{{customer}}</td>
+                    <td>{{entryDate}}</td>
+                    <td>{{itemCode}}</td>
+                    <td>{{orderName}}</td>
+                    <td>{{quantity}}</td>
+                    <td>{{designAge}}</td>
+                    <td>{{prodLength}}</td>
+                    <td>{{prodWidth}}</td>
+                    <td>{{paperType}}</td>
+                    <td>{{rp paperPrice}}</td>
+                    <td>{{dieLength}}</td>
+                    <td>{{dieWidth}}</td>
+                    <td>{{totalPiecesInDie}}</td>
+                    <td>{{nDieColor}}</td>
+                    <td>{{machineName}}</td>
+                    <td>{{machineSpeed}}</td>
+                    <td>{{setupTime}}</td>
+                    <td>{{nOperator}}</td>
+                    <td>{{rp totCostPerPiece}}</td>
+                    <td>{{profitMarginOffered}}</td>
+                    <td>{{rp pricePerPieceOffered}}</td>
+                    <td>{{rp totSalesPrice}}</td>
+                    <td>{{rp totProfit}}</td>
+                </tr>
+            {{else}}
+                <tr>
+                    <td>Loh, jek kosong</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
 </template>
