@@ -27,6 +27,9 @@ $.each({
     },
     perc: function (o) {
         return (o.hash.nominator * 100 / o.hash.denominator) + ' %';
+    },
+    isInRolez: function (role) {
+        return Roles.userIsInRole(Meteor.userId(), role);
     }
 }, function ( name, handler ) {
     Handlebars.registerHelper( name, handler );

@@ -14,8 +14,13 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{pathFor 'settings'}}" tabindex="-1">Settings</a></li>
-                    <li><a href="{{pathFor 'inputList'}}" tabindex="-1">Input</a></li>
+                    {{#if currentUser}}
+                        <li><a href="{{pathFor 'inputList'}}" tabindex="-1">Input</a></li>
+                        {{#if isInRolez 'admin'}}
+                            <li><a href="{{pathFor 'output'}}" tabindex="-1">Output</a></li>
+                            <li><a href="{{pathFor 'settings'}}" tabindex="-1">Settings</a></li>
+                        {{/if}}
+                    {{/if}}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {{> loginButtons}}
@@ -38,8 +43,10 @@
 <template name="homepage">
     <div class="container">
         {{#if currentUser}}
-            <a href="{{pathFor 'settings'}}" class="btn btn-default btn-lg" role="button" style="margin-bottom: 0.5em;"><span class="glyphicon glyphicon-wrench" style="font-size: 2em;"></span><h3>Settings</h3></a>
             <a href="{{pathFor 'inputList'}}" class="btn btn-default btn-lg" role="button" style="margin-bottom: 0.5em;"><span class="glyphicon glyphicon-import" style="font-size: 2em;"></span><h3>Input</h3></a>
+            {{#if isInRolez 'admin'}}
+                <a href="{{pathFor 'settings'}}" class="btn btn-default btn-lg" role="button" style="margin-bottom: 0.5em;"><span class="glyphicon glyphicon-wrench" style="font-size: 2em;"></span><h3>Settings</h3></a>
+            {{/if}}
         {{else}}
             <div class="jumbotron">
                 <h1>You're not logged in!</h1>
@@ -167,7 +174,9 @@
             <thead>
                 <tr>
                     <th>_id</th>
-                    <th></th>
+                    {{#if isInRole 'admin' 'default-group'}}
+                        <th></th>
+                    {{/if}}
                     <th>Customer</th>
                     <th>Entry Date</th>
                     <th>Kode Barang</th>
@@ -218,7 +227,9 @@
 <template name="input">
     <tr>
         <td>{{_id}}</td>
-        <td><a href="{{pathFor 'calculation' _id=this._id}}" class="btn btn-default">Calculate</a></td>
+        {{#if isInRole 'admin' 'default-group'}}
+            <td><a href="{{pathFor 'calculation' _id=this._id}}" class="btn btn-default">Calculate</a></td>
+        {{/if}}
         <td>{{customer}}</td>
         <td>{{entryDate}}</td>
         <td>{{itemCode}}</td>
@@ -467,5 +478,11 @@
             {{/each}}
             </tbody>
         </table>
+    </div>
+</template>
+
+<template name="unauthorized">
+    <div class="container text-center center-block">
+        <span class="glyphicon glyphicon-minus-sign"></span> Ga boleh
     </div>
 </template>
