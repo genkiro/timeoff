@@ -8,13 +8,27 @@
             <p>Order Date: {{input.entryDate}}</p>
             <p>Settings:
                 <ul>
-                    <li>Material Cost: {{settings.materialCost}}</li>
+                    <li>Material Cost: {{rp settings.materialCost}}</li>
                     <li>Safety Factor: {{settings.safetyFactor}}</li>
-                    <li>Operator Cost: {{settings.operatorCost}}</li>
+                    <li>Operator Cost: {{rp settings.operatorCost}}</li>
                     <li>Efficiency Factor: {{settings.efficiencyFactor}}</li>
-                    <li>Operator Waste Percent: {{settings.operatorWastePercent}}</li>
+                    <li>Operator Waste Percent: {{settings.operatorWastePercent}} %</li>
                     <li>Time Created: {{settings.timeCreated}}</li>
                 </ul>
+            </p>
+            <p>Paper used:
+            <ul>
+                <li>Name: {{paper.name}}</li>
+                <li>Price: {{rp paper.price}}</li>
+            </ul>
+            </p>
+            <p>Machine used:
+            <ul>
+                <li>Name: {{machine.name}}</li>
+                <li>Speed: {{machine.speed}}</li>
+                <li>Setup Time: {{machine.setupTime}}</li>
+                <li># of Operator: {{machine.nOperator}}</li>
+            </ul>
             </p>
 
             <p>Input:
@@ -25,15 +39,15 @@
                     <li>orderName: {{input.orderName}}</li>
                     <li>quantity: {{input.quantity}}</li>
                     <li>designAge: {{input.designAge}}</li>
-                    <li>prodLength: {{input.prodLength}}</li>
-                    <li>prodWidth: {{input.prodWidth}}</li>
+                    <li>prodLength: {{input.prodLength}} m</li>
+                    <li>prodWidth: {{input.prodWidth}} m</li>
                     <li>paperType: {{input.paperType}}</li>
                     <li>dieLength: {{input.dieLength}}</li>
                     <li>dieWidth: {{input.dieWidth}}</li>
                     <li>totalPiecesInDie: {{input.totalPiecesInDie}}</li>
                     <li>nDieColor: {{input.nDieColor}}</li>
                     <li>machineName: {{input.machineName}}</li>
-                    <li>inkPaperCostPercent: {{input.inkPaperCostPercent}}</li>
+                    <li>inkPaperCostPercent: {{input.inkPaperCostPercent}} %</li>
                 </ul>
             </p>
         </div>

@@ -1,8 +1,8 @@
 console.log('server file');
 
 var users = [
-    {name:"Manager",email:"manage@example.com",roles:['manager'],password:'golaprint1'},
-    {name:"Admin",email:"admin@example.com",roles:['admin'],password:'thinkexponential'}
+    {name:"Erlin",email:"erlin@laprint.com",roles:['manager'],password:'golaprint1'},
+    {name:"Raymond",email:"raymond@laprint.com",roles:['admin'],password:'thinkexponential'}
 ];
 
 _.each(users, function (user) {

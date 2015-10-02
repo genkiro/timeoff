@@ -418,6 +418,7 @@
                 <th>Offer Price (per piece)</th>
                 <th>Total Sales Price</th>
                 <th>Total Profit</th>
+                <th>When it's saved to output</th>
             </tr>
             </thead>
             <tbody>
@@ -447,6 +448,7 @@
                     <td>{{rp pricePerPieceOffered}}</td>
                     <td>{{rp totSalesPrice}}</td>
                     <td>{{rp totProfit}}</td>
+                    <td class="text-muted">{{timeCreated}}</td>
                 </tr>
             {{else}}
                 <tr>
@@ -474,10 +476,13 @@
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                 </tr>
             {{/each}}
             </tbody>
         </table>
+        <div class="container text-center"><button class="btn btn-default" id="loadMoreOutputs">Previous</button></div>
+        &nbsp;
     </div>
 </template>
 

@@ -82,6 +82,7 @@ Template.calculation.events({
         Inputs.update({ _id: this.input_id }, { $set: { isProcessed: true }});
 
         Outputs.insert({
+            timeCreated: new Date(),
             input_id: this.input_id,
             customer: this.input.customer,
             entryDate: this.input.entryDate,

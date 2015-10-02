@@ -1,5 +1,10 @@
 console.log('client file');
 
+Accounts.config({ forbidClientAccountCreation : true });
+
+/* How many rows shown in a page */
+pageSize = 25;
+
 // load a language
 numeral.language('id', {
     delimiters: {
@@ -218,6 +223,23 @@ Template.settings.events({
 
 Template.output.helpers({
     outputs: function() {
-        return Outputs.find({});
+        return Outputs.find({}, {limit: Session.get('outputPaging'), sort: {timeCreated: -1}});
+    }
+});
+
+Template.output.rendered = function () {
+    Session.set('outputPaging', pageSize);
+};
+
+Template.output.events({
+    'click #loadMoreOutputs': function (e) {
+        e.preventDefault();
+        var lastVal = Session.get('outputPaging');
+
+        if (lastVal >= Outputs.find({}).count()) {
+            alertify.error('No more outputs..');
+        } else {
+            Session.set('outputPaging', lastVal + pageSize);
+        }
     }
 });
