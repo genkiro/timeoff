@@ -31,7 +31,7 @@ $.each({
         return numeral(n).format('$ 0,0[.]00');
     },
     perc: function (o) {
-        return (o.hash.nominator * 100 / o.hash.denominator) + ' %';
+        return (o.hash.nominator * 100 / o.hash.denominator).toFixed(2) + ' %';
     },
     isInRolez: function (role) {
         return Roles.userIsInRole(Meteor.userId(), role);

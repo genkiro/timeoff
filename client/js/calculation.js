@@ -263,7 +263,7 @@ Template.calculation.helpers({
     },
     configWastePerc: function() {
         configWastePerc.set(100 * configWaste.get() / (prodTotArea.get() + configWaste.get()));
-        return configWastePerc.get();
+        return configWastePerc.get().toFixed(2);
     },
     totConfigWaste: function() {
         totConfigWaste.set(configWaste.get() * quantity.get());
@@ -295,15 +295,15 @@ Template.calculation.helpers({
     },
     totLength: function() {
         totLength.set(totManufacturingArea.get() / dieWidth.get());
-        return totLength.get();
+        return totLength.get().toFixed(3);
     },
     totProdTime: function() {
         totProdTime.set((1 / (efficiencyFactor.get()/100) * totLength.get() / machineSpeed.get() / 60) + setupTime.get());
-        return totProdTime.get();
+        return totProdTime.get().toFixed(3);
     },
     totManHour: function() {
         totManHour.set(totProdTime.get() * nOperator.get());
-        return totManHour.get();
+        return totManHour.get().toFixed(3);
     },
     totColorCost: function() {
         totColorCost.set(this.input.inkPaperCostPercent/100 * totManufacturingCost.get());
@@ -343,11 +343,11 @@ Template.calculation.helpers({
     },
     totProfit: function() {
         totProfit.set(profit.get());
-        return totProfit.get();
+        return totProfit.get().toFixed(2);
     },
     totSalesPrice: function() {
         totSalesPrice.set(totCost.get() + totProfit.get());
-        return totSalesPrice.get();
+        return totSalesPrice.get().toFixed(2);
     },
 
     totPaperCostPerPiece: function() {
@@ -384,7 +384,7 @@ Template.calculation.helpers({
     },
     totSalesPricePerPiece: function() {
         totSalesPricePerPiece.set(totCostPerPiece.get() + totProfitPerPiece.get());
-        return totSalesPricePerPiece.get();
+        return totSalesPricePerPiece.get().toFixed(2);
     },
 
     totPaperCostPerM2: function() {
