@@ -40,7 +40,7 @@ $.each({
     Handlebars.registerHelper( name, handler );
 });
 
-Template.inputCreate.rendered = function() {
+Template.inputForm.rendered = function() {
     var $date = $('.date');
     $date.datepicker({
         format: "dd MM yyyy",
@@ -74,19 +74,21 @@ Template.inputCreate.rendered = function() {
         },
         autoSelect: true
     });
+
+    var input = Template.currentData().input;
+    if (input) {
+        $('#entryDate').datepicker('update', input.entryDate);
+        $('input[value="' + input.designAge + '"]').prop("checked", true);
+    } else {
+        console.log('Template.currentData() ', Template.currentData());
+    }
 };
 
-var retrieveItemNames = function () {
-    var arr = [];
-    Items.find({}).forEach(function (x) { arr.push(x.name); });
-    return arr;
-};
-
-Template.inputCreate.events({
+Template.inputForm.events({
     'submit form': function (e) {
         e.preventDefault();
 
-        Inputs.insert({
+        var input = {
             customer: e.target.customer.value,
             entryDate: $(e.target.entryDate).datepicker('getDate'),
             itemCode: e.target.itemCode.value,
@@ -102,16 +104,34 @@ Template.inputCreate.events({
             nDieColor: Number($(e.target.nDieColor).inputmask('unmaskedvalue')),
             machineName: e.target.machineName.value,
             inkPaperCostPercent: Number($(e.target.inkPaperCostPercent).inputmask('unmaskedvalue')),
-            isProcessed: false
-        }, function (err, result) {
-            if (err) {
-                var msg = "err: " + err;
-                console.log(msg);
-            } else {
-                Router.go('inputList');
-                alertify.success('Saved!');
-            }
-        });
+            isProcessed: this.input ? this.input.isProcessed : false
+        };
+
+        if (this.input) {
+            Inputs.update(this.input._id,
+
+                { $set: input },
+
+                function (err, result) {
+                if (err) {
+                    var msg = "err: " + err;
+                    console.log(msg);
+                } else {
+                    Router.go('inputList');
+                    alertify.success('Updated!');
+                }
+            });
+        } else {
+            Inputs.insert(input, function (err, result) {
+                if (err) {
+                    var msg = "err: " + err;
+                    console.log(msg);
+                } else {
+                    Router.go('inputList');
+                    alertify.success('Saved!');
+                }
+            });
+        }
     }
 });
 

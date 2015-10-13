@@ -177,6 +177,7 @@
                     {{#if isInRole 'admin' 'default-group'}}
                         <th></th>
                     {{/if}}
+                    <th></th>
                     <th>Customer</th>
                     <th>Entry Date</th>
                     <th>Kode Barang</th>
@@ -216,6 +217,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
+                        <td></td>
                     </tr>
                 {{/each}}
             </tbody>
@@ -230,6 +232,7 @@
         {{#if isInRole 'admin' 'default-group'}}
             <td><a href="{{pathFor 'calculation' _id=this._id}}" class="btn btn-default">Calculate</a></td>
         {{/if}}
+        <td><a href="{{pathFor 'inputEdit' _id=this._id}}" class="btn btn-default">Edit</a></td>
         <td>{{customer}}</td>
         <td>{{entryDate}}</td>
         <td>{{itemCode}}</td>
@@ -251,142 +254,155 @@
 <template name="inputCreate">
     <div class="container">
         <div class="jumbotron">
-            <h1>Input</h1>
+            <h1>Create Input</h1>
             <p>This is where we insert the inquiries for precosting. This is the starting point.</p>
         </div>
-
-        <form class="form-horizontal">
-            <h3>General</h3>
-            <div class="form-group">
-                <label for="customer" class="col-sm-2 control-label">Customer</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="customer" placeholder="Liana Gonta, Ibu">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="entryDate" class="col-sm-2 control-label">Entry Date</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control date" id="entryDate">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="itemCode" class="col-sm-2 control-label">Kode Barang</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="itemCode" placeholder="M001/LISII0010">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="orderName" class="col-sm-2 control-label">Order Name</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="orderName" placeholder="St Jumble Juice Kangen Water">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="quantity" class="col-sm-2 control-label">Quantity</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control integer" id="quantity" placeholder="10 000">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="designAge" class="col-sm-2 control-label">Design Baru / Lama</label>
-                <div class="col-sm-6">
-                    <div class="input-group">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="designAge" id="newDesign" value="BARU" checked>
-                                Baru
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="designAge" id="oldDesign" value="LAMA">
-                                Lama
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <h3>Dimensions</h3>
-            <div class="form-group">
-                <label for="prodLength" class="col-sm-2 control-label">Product Length</label>
-                <div class="col-sm-3">
-                    <div class="input-group">
-                        <input type="text" class="form-control decimal" id="prodLength" placeholder="6.08">
-                        <span class="input-group-addon">meter(s)</span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="prodWidth" class="col-sm-2 control-label">Product Width</label>
-                <div class="col-sm-3">
-                    <div class="input-group">
-                        <input type="text" class="form-control decimal" id="prodWidth" placeholder="9.92">
-                        <span class="input-group-addon">meter(s)</span>
-                    </div>
-                </div>
-            </div>
-            <h3>Material</h3>
-            <div class="form-group">
-                <label for="paperType" class="col-sm-2 control-label">Paper Type</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="paperType" placeholder="Stc Transparant">
-                </div>
-            </div>
-            <h3>Cylinder & Die</h3>
-            <div class="form-group">
-                <label for="dieLength" class="col-sm-2 control-label">Die Length</label>
-                <div class="col-sm-3">
-                    <div class="input-group">
-                        <input type="text" class="form-control decimal" id="dieLength" placeholder="1.018">
-                        <span class="input-group-addon">meter(s)</span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="dieWidth" class="col-sm-2 control-label">Die Width</label>
-                <div class="col-sm-3">
-                    <div class="input-group">
-                        <input type="text" class="form-control decimal" id="dieWidth" placeholder="0.135">
-                        <span class="input-group-addon">meter(s)</span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="totalPiecesInDie" class="col-sm-2 control-label">Total Pieces In Die</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control integer" id="totalPiecesInDie" placeholder="2">
-                </div>
-            </div>
-
-            <h3>Pre-press</h3>
-            <div class="form-group">
-                <label for="nDieColor" class="col-sm-2 control-label">Number of Color (die)</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control integer" id="nDieColor" placeholder="2">
-                </div>
-            </div>
-
-            <h3>Manufacturing Process</h3>
-            <div class="form-group">
-                <label for="machineName" class="col-sm-2 control-label">Machine Name</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="machineName" placeholder="Rotary">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="inkPaperCostPercent" class="col-sm-2 control-label">Ink Cost / Paper Cost in %</label>
-                <div class="col-sm-3">
-                    <div class="input-group">
-                        <input type="text" class="form-control integer" id="inkPaperCostPercent" placeholder="10">
-                        <span class="input-group-addon">%</span>
-                    </div>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        &nbsp;
-
+        {{> inputForm}}
     </div>
+</template>
+
+<template name="inputEdit">
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Edit Input</h1>
+            <p>Input ID: {{input._id}}</p>
+        </div>
+
+        {{> inputForm input=input}}
+    </div>
+</template>
+
+<template name="inputForm">
+    <form class="form-horizontal">
+        <h3>General</h3>
+        <div class="form-group">
+            <label for="customer" class="col-sm-2 control-label">Customer</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="customer" placeholder="Liana Gonta, Ibu" value="{{input.customer}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="entryDate" class="col-sm-2 control-label">Entry Date</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control date" id="entryDate">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="itemCode" class="col-sm-2 control-label">Kode Barang</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="itemCode" placeholder="M001/LISII0010" value="{{input.itemCode}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="orderName" class="col-sm-2 control-label">Order Name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="orderName" placeholder="St Jumble Juice Kangen Water" value="{{input.orderName}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="quantity" class="col-sm-2 control-label">Quantity</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control integer" id="quantity" placeholder="10 000" value="{{input.quantity}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="designAge" class="col-sm-2 control-label">Design Baru / Lama</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="designAge" id="newDesign" value="BARU" checked>
+                            Baru
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="designAge" id="oldDesign" value="LAMA">
+                            Lama
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3>Dimensions</h3>
+        <div class="form-group">
+            <label for="prodLength" class="col-sm-2 control-label">Product Length</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <input type="text" class="form-control decimal" id="prodLength" placeholder="6.08" value="{{input.prodLength}}">
+                    <span class="input-group-addon">meter(s)</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="prodWidth" class="col-sm-2 control-label">Product Width</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <input type="text" class="form-control decimal" id="prodWidth" placeholder="9.92" value="{{input.prodWidth}}">
+                    <span class="input-group-addon">meter(s)</span>
+                </div>
+            </div>
+        </div>
+        <h3>Material</h3>
+        <div class="form-group">
+            <label for="paperType" class="col-sm-2 control-label">Paper Type</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="paperType" placeholder="Stc Transparant" value="{{input.paperType}}">
+            </div>
+        </div>
+        <h3>Cylinder & Die</h3>
+        <div class="form-group">
+            <label for="dieLength" class="col-sm-2 control-label">Die Length</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <input type="text" class="form-control decimal" id="dieLength" placeholder="1.018" value="{{input.dieLength}}">
+                    <span class="input-group-addon">meter(s)</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="dieWidth" class="col-sm-2 control-label">Die Width</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <input type="text" class="form-control decimal" id="dieWidth" placeholder="0.135" value="{{input.dieWidth}}">
+                    <span class="input-group-addon">meter(s)</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="totalPiecesInDie" class="col-sm-2 control-label">Total Pieces In Die</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control integer" id="totalPiecesInDie" placeholder="2" value="{{input.totalPiecesInDie}}">
+            </div>
+        </div>
+
+        <h3>Pre-press</h3>
+        <div class="form-group">
+            <label for="nDieColor" class="col-sm-2 control-label">Number of Color (die)</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control integer" id="nDieColor" placeholder="2" value="{{input.nDieColor}}">
+            </div>
+        </div>
+
+        <h3>Manufacturing Process</h3>
+        <div class="form-group">
+            <label for="machineName" class="col-sm-2 control-label">Machine Name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="machineName" placeholder="Rotary" value="{{input.machineName}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inkPaperCostPercent" class="col-sm-2 control-label">Ink Cost / Paper Cost in %</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <input type="text" class="form-control integer" id="inkPaperCostPercent" placeholder="10" value="{{input.inkPaperCostPercent}}">
+                    <span class="input-group-addon">%</span>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    &nbsp;
 </template>
 
 <template name="output">
