@@ -1,5 +1,5 @@
 {
-  // Server authentication info
+  // PIKACHU Server authentication info
   "servers": [
     {
       "host": "128.199.205.10",
