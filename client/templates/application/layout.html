@@ -5,20 +5,20 @@
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <a class="navbar-brand" href="#" tabindex="-1">
-                    <img alt="LaPrint Precost" src="favicon.ico" width="20em" height="20em">
+                    <img alt="Semarto Holiday" src="favicon.ico" width="20em" height="20em">
                 </a>
                 {{> burgerMenuIcon}}
-                <a class="navbar-brand" href="{{pathFor 'homepage'}}" tabindex="-1">LaPrint Precost</a>
+                <a class="navbar-brand" href="{{pathFor 'homepage'}}" tabindex="-1">Semarto Holiday</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     {{#if currentUser}}
-                        <li><a href="{{pathFor 'inputList'}}" tabindex="-1">Input</a></li>
+                        <li><a href="{{pathFor 'yourBalance'}}" tabindex="-1">Your Balance</a></li>
                         {{#if isInRolez 'admin'}}
-                            <li><a href="{{pathFor 'output'}}" tabindex="-1">Output</a></li>
-                            <li><a href="{{pathFor 'settings'}}" tabindex="-1">Settings</a></li>
+                            <li><a href="{{pathFor 'allBalances'}}" tabindex="-1">Everybody's Balance</a></li>
+                            <li><a href="{{pathFor 'personnels'}}" tabindex="-1">Personnels</a></li>
                         {{/if}}
                     {{/if}}
                 </ul>
@@ -43,16 +43,66 @@
 <template name="homepage">
     <div class="container">
         {{#if currentUser}}
-            <a href="{{pathFor 'inputList'}}" class="btn btn-default btn-lg" role="button" style="margin-bottom: 0.5em;"><span class="glyphicon glyphicon-import" style="font-size: 2em;"></span><h3>Input</h3></a>
+            <a href="{{pathFor 'yourBalance'}}" class="btn btn-default btn-lg" role="button" style="margin-bottom: 0.5em;"><span class="glyphicon glyphicon-file" style="font-size: 2em;"></span><h3>Your Balance</h3></a>
             {{#if isInRolez 'admin'}}
-                <a href="{{pathFor 'settings'}}" class="btn btn-default btn-lg" role="button" style="margin-bottom: 0.5em;"><span class="glyphicon glyphicon-wrench" style="font-size: 2em;"></span><h3>Settings</h3></a>
+                <a href="{{pathFor 'allBalances'}}" class="btn btn-default btn-lg" role="button" style="margin-bottom: 0.5em;"><span class="glyphicon glyphicon-folder-open" style="font-size: 2em;"></span><h3>Everybody's Balances</h3></a>
+                <a href="{{pathFor 'personnels'}}" class="btn btn-default btn-lg" role="button" style="margin-bottom: 0.5em;"><span class="glyphicon glyphicon-user" style="font-size: 2em;"></span><h3>Personnels</h3></a>
             {{/if}}
         {{else}}
             <div class="jumbotron">
                 <h1>You're not logged in!</h1>
-                <p>If you can't log in, ask Raymond.</p>
+                <p>If you can't log in, ask your admin.</p>
             </div>
         {{/if}}
+    </div>
+</template>
+
+<template name="yourBalance">
+    <div class="container">
+        Your Balance.
+    </div>
+</template>
+
+<template name="allBalances">
+    <div class="container">
+        All Balances.
+    </div>
+</template>
+
+<template name="personnels">
+    <div class="container">
+        <h3>Personnels</h3>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                    <th>Email(s)</th>
+                    <th>Start Working Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each user in users}}
+                    <tr data-id="{{user._id}}"><td>{{user.profile.name}}</td><td><button class="btn btn-default btn-sm editName"><span class="glyphicon glyphicon-pencil"></span></button></td><td>{{#each e in user.emails}}{{e.address}} {{/each}}</td><td>{{getStartDate user._id}}</td><td><button class="btn btn-default btn-sm editStartDate"><span class="glyphicon glyphicon-pencil"></span></button></td></tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/><br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/><br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
     </div>
 </template>
 

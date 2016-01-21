@@ -1,8 +1,8 @@
 console.log('server file');
 
 var users = [
-    {name:"Erlin",email:"erlin@laprint.com",roles:['manager'],password:'golaprint1'},
-    {name:"Raymond",email:"raymond@laprint.com",roles:['admin'],password:'thinkexponential'}
+    {name:"Employee Number 1",email:"employee@fake.com",roles:['manager'],password:'pikachu'},
+    {name:"Christine Widjaja",email:"christine.yulianti.widjaja@gmail.com",roles:['admin'],password:'thinkexponential'}
 ];
 
 _.each(users, function (user) {
@@ -25,4 +25,15 @@ _.each(users, function (user) {
         Roles.addUsersToRoles(id, user.roles, Roles.GLOBAL_GROUP);
     }
 
+});
+
+// Some hack so we can see all emails
+Meteor.publish("allUserData", function () {
+    return Meteor.users.find({}, {fields: {"emails.address": 1}});
+});
+
+Meteor.users.allow({
+    update: function () {
+        return Roles.userIsInRole(Meteor.userId(), 'admin');
+    }
 });

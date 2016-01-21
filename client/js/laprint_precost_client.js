@@ -1,6 +1,8 @@
 console.log('client file');
 
-Accounts.config({ forbidClientAccountCreation : true });
+// Some hack so we can see all emails
+Meteor.subscribe("allUserData");
+//Accounts.config({ forbidClientAccountCreation : true }); // put it in the lib folder
 
 /* How many rows shown in a page */
 pageSize = 25;
@@ -35,6 +37,11 @@ $.each({
     },
     isInRolez: function (role) {
         return Roles.userIsInRole(Meteor.userId(), role);
+    },
+    simpleDate: function (date) {
+        if (typeof date != 'undefined' && date instanceof Date) {
+            return moment(date).format('d MMMM YYYY');
+        }
     }
 }, function ( name, handler ) {
     Handlebars.registerHelper( name, handler );
@@ -261,5 +268,73 @@ Template.output.events({
         } else {
             Session.set('outputPaging', lastVal + pageSize);
         }
+    }
+});
+
+Template.personnels.rendered = function () {
+    var $date = $('.date');
+    $date.datepicker({
+        format: "dd MM yyyy",
+        todayBtn: "linked",
+        clearBtn: true,
+        language: "id",
+        //daysOfWeekDisabled: "0",
+        autoclose: true,
+        todayHighlight: true,
+        toggleActive: true
+    });
+    $date.datepicker('update', new Date());
+};
+
+Template.personnels.events({
+    'click #addPersonnel': function(e) {
+        e.preventDefault();
+        PersonnelInfo.insert({ name: $('#newPersonnelName').val(), startDate: $('#newPersonnelStartDate').datepicker('getDate') });
+    },
+    'click .editStartDate': function (e) {
+        e.preventDefault();
+
+        var userId = $(e.target).closest('tr').data('id');
+        var personnel = PersonnelInfo.findOne({_id: userId });
+        var oldDate = personnel ? personnel.startDate : null;
+
+        alertify.prompt('Change start date from "' + oldDate + '" to what?', oldDate,
+            function (evt, newDate) {
+                PersonnelInfo.upsert({_id: userId }, { $set: { startDate: newDate }}, function () {
+                    alertify.success('Start date was changed from "' + oldDate + '" to "'  + newDate + '"');
+                });
+            },
+            function () {
+                alertify.error('Cancel');
+            }
+        ).set('type', 'date');
+    },
+    'click .editName': function (e) {
+        e.preventDefault();
+
+        var userId = $(e.target).closest('tr').data('id');
+        var oldName = Meteor.users.findOne({_id: userId}).profile.name;
+
+        alertify.prompt('Change name from "' + oldName + '" to what?', oldName,
+            function (evt, newName) {
+                Meteor.users.update({_id: userId}, {$set: {"profile.name": newName}})
+            },
+            function () {
+                alertify.error('Cancel');
+            }
+        ).set('type', 'text');
+    }
+});
+
+Template.personnels.helpers({
+    users: function () {
+        return Meteor.users.find({});
+    },
+    personnels: function () {
+       return PersonnelInfo.find({});
+    },
+    getStartDate: function (id) {
+        var personnel = PersonnelInfo.findOne({ _id: id});
+        return personnel ? personnel.startDate : '-';
     }
 });
