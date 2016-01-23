@@ -4,6 +4,8 @@ console.log('client file');
 Meteor.subscribe("allUserData");
 //Accounts.config({ forbidClientAccountCreation : true }); // put it in the lib folder
 
+var selectedUserId = new Blaze.ReactiveVar();
+
 /* How many rows shown in a page */
 pageSize = 25;
 
@@ -300,7 +302,7 @@ Template.personnels.events({
 
         alertify.prompt('Change start date from "' + oldDate + '" to what?', oldDate,
             function (evt, newDate) {
-                PersonnelInfo.upsert({_id: userId }, { $set: { startDate: newDate }}, function () {
+                PersonnelInfo.upsert({_id: userId }, { $set: { startDate: moment(newDate).toDate() }}, function () {
                     alertify.success('Start date was changed from "' + oldDate + '" to "'  + newDate + '"');
                 });
             },
@@ -333,8 +335,42 @@ Template.personnels.helpers({
     personnels: function () {
        return PersonnelInfo.find({});
     },
-    getStartDate: function (id) {
-        var personnel = PersonnelInfo.findOne({ _id: id});
-        return personnel ? personnel.startDate : '-';
+    getSimpleStartDate: function (id) {
+        var startDate = calc.getStartDate(id);
+        return startDate ? startDate.format('DD MMMM YYYY') : '-';
+    }
+});
+
+Template.allBalances.events({
+    'click tr': function (e) {
+        e.preventDefault();
+        selectedUserId.set($(e.target).closest('tr').data('id'));
+    }
+});
+
+Template.allBalances.helpers({
+    users: function () {
+        return Meteor.users.find({});
+    },
+    userId: function () {
+        return selectedUserId.get();
+    },
+    dataToDisplay: function () {
+        return 'someFunction(selectedUserId.get())';
+    },
+    personnels: function () {
+        return PersonnelInfo.find({});
+    },
+    getAchieved: function (id) {
+        return calc.getAchieved(id);
+    },
+    getUsages: function (id) {
+        return calc.getUsages(id);
+    },
+    getBalance: function (id) {
+        return calc.getBalance(id);
+    },
+    isSelected: function (id) {
+        return selectedUserId.get() == id;
     }
 });

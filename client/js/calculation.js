@@ -1,3 +1,22 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////// Delete below
+
+
 var targetProfitMargin = new Blaze.ReactiveVar(30);
 
 var orderName = new Blaze.ReactiveVar();

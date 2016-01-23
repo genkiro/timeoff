@@ -65,7 +65,27 @@
 
 <template name="allBalances">
     <div class="container">
-        All Balances.
+        <div class="container col-md-3">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each user in users}}
+                        <tr data-id="{{user._id}}" class="{{#if isSelected user._id}}active{{/if}}"><td>{{user.profile.name}}</td><td>{{getBalance user._id}}</td></tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        <div class="container col-md-9">
+            <p>id: {{userId}}</p>
+            <p>Achieved: {{getAchieved userId}}</p>
+            <p>Usages: {{getUsages userId}}</p>
+            <p>Balance: {{getBalance userId}}</p>
+        </div>
     </div>
 </template>
 
@@ -84,7 +104,7 @@
             </thead>
             <tbody>
                 {{#each user in users}}
-                    <tr data-id="{{user._id}}"><td>{{user.profile.name}}</td><td><button class="btn btn-default btn-sm editName"><span class="glyphicon glyphicon-pencil"></span></button></td><td>{{#each e in user.emails}}{{e.address}} {{/each}}</td><td>{{getStartDate user._id}}</td><td><button class="btn btn-default btn-sm editStartDate"><span class="glyphicon glyphicon-pencil"></span></button></td></tr>
+                    <tr data-id="{{user._id}}"><td>{{user.profile.name}}</td><td><button class="btn btn-default btn-sm editName"><span class="glyphicon glyphicon-pencil"></span></button></td><td>{{#each e in user.emails}}{{e.address}} {{/each}}</td><td>{{getSimpleStartDate user._id}}</td><td><button class="btn btn-default btn-sm editStartDate"><span class="glyphicon glyphicon-pencil"></span></button></td></tr>
                 {{/each}}
             </tbody>
         </table>
