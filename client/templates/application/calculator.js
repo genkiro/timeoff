@@ -1,6 +1,6 @@
 calc = {
     getStartDate: function (id) {
-        var personnel = PersonnelInfo.findOne({ _id: id});
+        var personnel = PersonnelInfo.findOne({_id: id});
         return personnel ? moment(personnel.startDate) : null;
     },
     getAchieved: function (id) {
@@ -14,4 +14,7 @@ calc = {
     getBalance: function (id) {
         return Math.min(this.getAchieved(id) - this.getUsages(), 12);
     }
+    //getAll: function (id) {
+    //    return data structure that represents all.
+    //}
 };
