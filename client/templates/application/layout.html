@@ -66,7 +66,7 @@
 <template name="allBalances">
     <div class="container">
         <div class="container col-md-3">
-            <table class="table table-hover">
+            <table class="table table-hover table-bordered">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -75,16 +75,53 @@
                 </thead>
                 <tbody>
                     {{#each user in users}}
-                        <tr data-id="{{user._id}}" class="{{#if isSelected user._id}}active{{/if}}"><td>{{user.profile.name}}</td><td>{{getBalance user._id}}</td></tr>
+                        <tr data-id="{{user._id}}" class="{{#if isSelected user._id}}active{{/if}}"><td>{{user.profile.name}}</td><td>{{getFinalBalance user._id}}</td></tr>
                     {{/each}}
                 </tbody>
             </table>
         </div>
         <div class="container col-md-9">
-            <p>id: {{userId}}</p>
-            <p>Achieved since last reset (*insert reset here*): {{getAchieved userId}}</p>
-            <p>Usages: {{getUsages userId}}</p>
-            <p>Balance: {{getBalance userId}}</p>
+
+            {{#if userId}}
+                <table class="table table-bordered">
+                    <colgroup>
+                        <col class="col-xs-3">
+                        <col class="col-xs-5">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Start Date</th>
+                            <td>{{toSimpleMoment c.startDate}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Achieved since last reset (*insert reset here*)</th>
+                            <td class="text-success">{{c.achieved}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Usages</th>
+                            <td class="text-danger">{{c.usages}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Before expiration</th>
+                            <td>{{c.beforeExpiration}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Expired</th>
+                            <td class="text-danger">{{c.expired}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">After expiration</th>
+                            <td>{{c.afterExpiration}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Final Balance</th>
+                            <td>{{c.finalBalance}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            {{else}}
+                <div class="well"><strong>← Select one</strong></div>
+            {{/if}}
         </div>
     </div>
 </template>

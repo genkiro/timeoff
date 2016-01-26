@@ -40,10 +40,8 @@ $.each({
     isInRolez: function (role) {
         return Roles.userIsInRole(Meteor.userId(), role);
     },
-    simpleDate: function (date) {
-        if (typeof date != 'undefined' && date instanceof Date) {
-            return moment(date).format('d MMMM YYYY');
-        }
+    toSimpleMoment: function (moment) {
+        return moment.format('D MMMM YYYY');
     }
 }, function ( name, handler ) {
     Handlebars.registerHelper( name, handler );
@@ -337,7 +335,7 @@ Template.personnels.helpers({
     },
     getSimpleStartDate: function (id) {
         var startDate = calc.getStartDate(id);
-        return startDate ? startDate.format('DD MMMM YYYY') : '-';
+        return startDate ? startDate.format('D MMMM YYYY') : '-';
     }
 });
 
@@ -352,23 +350,17 @@ Template.allBalances.helpers({
     users: function () {
         return Meteor.users.find({});
     },
+    selectedUser: function () {
+        return Meteor.users.find({ _id: selectedUserId.get() });
+    },
     userId: function () {
         return selectedUserId.get();
     },
-    dataToDisplay: function () {
-        return 'someFunction(selectedUserId.get())';
+    getFinalBalance: function (id) {
+        return calc.getFinalBalance(id);
     },
-    personnels: function () {
-        return PersonnelInfo.find({});
-    },
-    getAchieved: function (id) {
-        return calc.getAchieved(id);
-    },
-    getUsages: function (id) {
-        return calc.getUsages(id);
-    },
-    getBalance: function (id) {
-        return calc.getBalance(id);
+    c: function() {
+        return calc.getCompleteCalc(selectedUserId.get());
     },
     isSelected: function (id) {
         return selectedUserId.get() == id;

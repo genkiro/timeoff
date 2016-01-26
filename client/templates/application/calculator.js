@@ -4,17 +4,32 @@ calc = {
         return personnel ? moment(personnel.startDate) : null;
     },
     getAchieved: function (id) {
-        var today = moment();
-        var startDate = this.getStartDate(id);
-        return today.diff(startDate, 'month'); // Can be NaN if startDate is not found
+        return moment().diff(this.getStartDate(id).startOf('month'), 'month');
     },
     getUsages: function (id) {
         return 0;
     },
-    getBalance: function (id) {
-        return Math.min(this.getAchieved(id) - this.getUsages(), 12);
+    getBeforeExpiration: function (id) {
+        return this.getAchieved(id) - this.getUsages(id);
+    },
+    getExpired: function (id) {
+        return this.getBeforeExpiration(id) - this.getAfterExpiration(id);
+    },
+    getAfterExpiration: function(id) {
+        return Math.min(this.getBeforeExpiration(id), 12);
+    },
+    getFinalBalance: function (id) {
+        return this.getAfterExpiration(id);
+    },
+    getCompleteCalc: function (id) {
+        return {
+            startDate: this.getStartDate(id),
+            achieved: this.getAchieved(id),
+            usages: this.getUsages(id),
+            beforeExpiration: this.getBeforeExpiration(id),
+            expired: this.getExpired(id),
+            afterExpiration: this.getAfterExpiration(id),
+            finalBalance: this.getFinalBalance(id)
+        }
     }
-    //getAll: function (id) {
-    //    return data structure that represents all.
-    //}
 };
