@@ -66,8 +66,6 @@
 <template name="allBalances">
     <div class="container">
         <div class="container col-md-3">
-
-            <p>Events: {{events}}</p>
             <table class="table table-hover table-bordered">
                 <thead>
                     <tr class="user">
@@ -92,16 +90,20 @@
                     </colgroup>
                     <tbody>
                         <tr>
-                            <th scope="row">Start Date</th>
-                            <td>{{toSimpleMoment c.startDate}}</td>
+                            <th scope="row">Name</th>
+                            <td>{{selectedUser.profile.name}}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Achieved since last reset (*insert reset here*)</th>
+                            <th scope="row">Start Date</th>
+                            <td>{{toSimpleDate c.startDate}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Achieved</th>
                             <td class="text-success">{{c.achieved}}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Usages</th>
-                            <td class="text-danger">{{c.usages}}</td>
+                            <th scope="row">Used</th>
+                            <td class="text-danger">({{c.usages}})</td>
                         </tr>
                         <tr>
                             <th scope="row">Before expiration</th>
@@ -109,15 +111,15 @@
                         </tr>
                         <tr>
                             <th scope="row">Expired</th>
-                            <td class="text-danger">{{c.expired}}</td>
+                            <td class="text-danger">({{c.expired}})</td>
                         </tr>
                         <tr>
                             <th scope="row">After expiration</th>
                             <td>{{c.afterExpiration}}</td>
                         </tr>
-                        <tr>
+                        <tr class="info">
                             <th scope="row">Final Balance</th>
-                            <td>{{c.finalBalance}}</td>
+                            <td><strong>{{c.finalBalance}}</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -150,17 +152,17 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="length" class="control-label">For how many days?</label>
-                                            <input type="number" class="form-control" id="length">
+                                            <input type="number" class="form-control" id="ptoLength">
                                         </div>
                                         <div class="form-group">
                                             <label for="description" class="control-label">Description:</label>
-                                            <textarea class="form-control" id="description"></textarea>
+                                            <textarea class="form-control" id="ptoDescription"></textarea>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" id="addPTO">Save</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="addPTO">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -170,9 +172,10 @@
                 <table class="table table-bordered">
                     <colgroup>
                         <col class="col-xs-1">
-                        <col class="col-xs-1">
+                        <col class="col-xs-2">
                         <col class="col-xs-1">
                         <col class="col-xs-4">
+                        {{#if isInRolez 'admin'}}<col class="col-xs-1">{{/if}}
                     </colgroup>
                     <thead>
                         <tr>
@@ -180,12 +183,13 @@
                             <th>Date</th>
                             <th>Length (days)</th>
                             <th>Description</th>
+                            {{#if isInRolez 'admin'}}<th></th>{{/if}}
                         </tr>
                     </thead>
                     <tbody>
                         {{#if events}}
                             {{#each e in events}}
-                                <tr data-id="{{e._id}}"><td>{{e.type}}</td><td>{{e.eventStartDate}}</td><td>{{e.length}}</td><td>{{e.description}}</td></tr>
+                                <tr data-id="{{e.id}}" data-type="{{e.type}}" data-date="{{e.eventStartDate}}" data-description="{{e.description}}"><td>{{e.type}}</td><td>{{toSimpleDate e.eventStartDate}}</td><td>{{e.length}}</td><td class="description">{{e.description}}</td>{{#if isInRolez 'admin'}}<td><button class="btn btn-default btn-sm deleteEvent"><span class="glyphicon glyphicon-remove"></span></button></td>{{/if}}</tr>
                             {{/each}}
                         {{else}}
                             <tr><td colspan="4">No event is found.</td></tr>

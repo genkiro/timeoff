@@ -40,8 +40,12 @@ $.each({
     isInRolez: function (role) {
         return Roles.userIsInRole(Meteor.userId(), role);
     },
-    toSimpleMoment: function (moment) {
-        return moment.format('D MMMM YYYY');
+    toSimpleDate: function (input) {
+        if (typeof input != 'undefined' && input instanceof Date) {
+            return moment(input).format('D MMMM YYYY');
+        } else {
+            return input.format('D MMMM YYYY');
+        }
     }
 }, function ( name, handler ) {
     Handlebars.registerHelper( name, handler );
@@ -346,10 +350,44 @@ Template.allBalances.events({
     },
     'click #addPTO': function (e) {
         e.preventDefault();
+
         PersonnelInfo.upsert(
             { _id: selectedUserId.get()},
-            { $push: { events: { type: 'USAGE', eventStartDate: new Date(), length: 1, description: 'pikachu' } } }
+            { $push: {
+                events: {
+                    id: Random.id(),
+                    type: 'USAGE',
+                    eventStartDate: moment($('#ptoStartDate').val()).toDate(),
+                    length: Number($('#ptoLength').val()),
+                    description: $('#ptoDescription').val()
+                }
+            }},
+            function () {
+                alertify.success('Saved!');
+            }
         );
+    },
+    'click .deleteEvent': function (e) {
+        e.preventDefault();
+
+        var tr = $(e.target).closest('tr');
+        var id = tr.data('id');
+        var type = tr.data('type');
+        var date = new Date(tr.data('date'));
+        var description = tr.data('description');
+
+        alertify.confirm('Are you sure to delete this ' + type + ' "' + description + '" event at ' + moment(date).format('D MMMM YYYY') + ' ?',
+            function () {
+                PersonnelInfo.update(
+                    { _id: selectedUserId.get() },
+                    { $pull: {
+                        events: { id: id, eventStartDate: date }
+                    } },
+                    function (err) { alertify.success('Deleted'); });
+            },
+            function () { }
+        );
+
     }
 });
 
@@ -358,11 +396,13 @@ Template.allBalances.helpers({
         return Meteor.users.find({});
     },
     events: function () {
-        //return PersonnelInfo.find(selectedUserId.get()).fetch()[0].startDate;
-        return PersonnelInfo.findOne(selectedUserId.get()).events;
+        return _.sortBy(PersonnelInfo.findOne(selectedUserId.get()).events, 'eventStartDate');
+    },
+    selectedPersonnel: function () {
+        return PersonnelInfo.findOne(selectedUserId.get());
     },
     selectedUser: function () {
-        return Meteor.users.find({ _id: selectedUserId.get() });
+        return Meteor.users.findOne(selectedUserId.get());
     },
     userId: function () {
         return selectedUserId.get();

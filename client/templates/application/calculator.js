@@ -1,13 +1,17 @@
 calc = {
+    getPersonnel: function (id) {
+        return PersonnelInfo.findOne({_id: id});
+    },
     getStartDate: function (id) {
-        var personnel = PersonnelInfo.findOne({_id: id});
+        var personnel = this.getPersonnel(id);
         return personnel ? moment(personnel.startDate) : null;
     },
     getAchieved: function (id) {
         return moment().diff(this.getStartDate(id).startOf('month'), 'month');
     },
     getUsages: function (id) {
-        return 0;
+        var personnel = this.getPersonnel(id);
+        return _.filter(personnel.events, function (el, i) { return el.type = 'USAGE' }).length;
     },
     getBeforeExpiration: function (id) {
         return this.getAchieved(id) - this.getUsages(id);
