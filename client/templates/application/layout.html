@@ -66,16 +66,18 @@
 <template name="allBalances">
     <div class="container">
         <div class="container col-md-3">
+
+            <p>Events: {{events}}</p>
             <table class="table table-hover table-bordered">
                 <thead>
-                    <tr>
+                    <tr class="user">
                         <th>Name</th>
                         <th>Balance</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{#each user in users}}
-                        <tr data-id="{{user._id}}" class="{{#if isSelected user._id}}active{{/if}}"><td>{{user.profile.name}}</td><td>{{getFinalBalance user._id}}</td></tr>
+                        <tr data-id="{{user._id}}" class="user {{#if isSelected user._id}}active{{/if}}"><td>{{user.profile.name}}</td><td>{{getFinalBalance user._id}}</td></tr>
                     {{/each}}
                 </tbody>
             </table>
@@ -119,6 +121,78 @@
                         </tr>
                     </tbody>
                 </table>
+
+                <p>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#ptoModal">
+                        Use Paid Time Off
+                    </button>
+                    <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#cashOutModal">
+                        Cash Out
+                    </button>
+                    <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#penaltyModal">
+                        Penalty On The Wage
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="ptoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Use Paid Time Off</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="ptoStartDate" class="control-label">PTO starts at:</label>
+                                            <input type="date" class="form-control" id="ptoStartDate">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="length" class="control-label">For how many days?</label>
+                                            <input type="number" class="form-control" id="length">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="description" class="control-label">Description:</label>
+                                            <textarea class="form-control" id="description"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" id="addPTO">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </p>
+
+                <table class="table table-bordered">
+                    <colgroup>
+                        <col class="col-xs-1">
+                        <col class="col-xs-1">
+                        <col class="col-xs-1">
+                        <col class="col-xs-4">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Length (days)</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#if events}}
+                            {{#each e in events}}
+                                <tr data-id="{{e._id}}"><td>{{e.type}}</td><td>{{e.eventStartDate}}</td><td>{{e.length}}</td><td>{{e.description}}</td></tr>
+                            {{/each}}
+                        {{else}}
+                            <tr><td colspan="4">No event is found.</td></tr>
+                        {{/if}}
+                    </tbody>
+                </table>
+
             {{else}}
                 <div class="well"><strong>← Select one</strong></div>
             {{/if}}
@@ -145,21 +219,6 @@
                 {{/each}}
             </tbody>
         </table>
-
-
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/><br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/><br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
     </div>
 </template>
 

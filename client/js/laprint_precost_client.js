@@ -340,15 +340,26 @@ Template.personnels.helpers({
 });
 
 Template.allBalances.events({
-    'click tr': function (e) {
+    'click tr.user': function (e) {
         e.preventDefault();
         selectedUserId.set($(e.target).closest('tr').data('id'));
+    },
+    'click #addPTO': function (e) {
+        e.preventDefault();
+        PersonnelInfo.upsert(
+            { _id: selectedUserId.get()},
+            { $push: { events: { type: 'USAGE', eventStartDate: new Date(), length: 1, description: 'pikachu' } } }
+        );
     }
 });
 
 Template.allBalances.helpers({
     users: function () {
         return Meteor.users.find({});
+    },
+    events: function () {
+        //return PersonnelInfo.find(selectedUserId.get()).fetch()[0].startDate;
+        return PersonnelInfo.findOne(selectedUserId.get()).events;
     },
     selectedUser: function () {
         return Meteor.users.find({ _id: selectedUserId.get() });
