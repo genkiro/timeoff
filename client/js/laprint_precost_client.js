@@ -441,5 +441,9 @@ Template.allBalances.helpers({
     },
     isSelected: function (id) {
         return selectedUserId.get() == id;
+    },
+    details: function () {
+        return calc.getDetails(selectedUserId.get());
     }
+
 });
