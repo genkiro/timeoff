@@ -367,6 +367,25 @@ Template.allBalances.events({
             }
         );
     },
+    'click #addCashOut': function (e) {
+        e.preventDefault();
+
+        PersonnelInfo.upsert(
+            { _id: selectedUserId.get()},
+            { $push: {
+                events: {
+                    id: Random.id(),
+                    type: 'CASHOUT',
+                    eventStartDate: moment($('#ptoStartDate').val()).toDate(),
+                    length: Number($('#ptoLength').val()),
+                    description: 'Paid: '
+                }
+            }},
+            function () {
+                alertify.success('Saved!');
+            }
+        );
+    },
     'click .deleteEvent': function (e) {
         e.preventDefault();
 
@@ -388,6 +407,13 @@ Template.allBalances.events({
             function () { }
         );
 
+    },
+    'click #cashOutAll': function (e) {
+        e.preventDefault();
+        $('#cashOutLength').val(calc.getFinalBalance(selectedUserId.get()));
+    },
+    'hidden.bs.modal .modal': function (e) {
+        $(e.target).find('form')[0].reset();
     }
 });
 

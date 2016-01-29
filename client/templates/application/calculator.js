@@ -11,7 +11,13 @@ calc = {
     },
     getUsages: function (id) {
         var personnel = this.getPersonnel(id);
-        return _.filter(personnel.events, function (el, i) { return el.type = 'USAGE' }).length;
+        var sum = 0;
+
+        _.chain(personnel.events)
+         .filter(function (el, i) { return el.type = 'USAGE'; })
+         .each(function (el, i) { sum += el['length']; });
+
+        return sum;
     },
     getBeforeExpiration: function (id) {
         return this.getAchieved(id) - this.getUsages(id);
