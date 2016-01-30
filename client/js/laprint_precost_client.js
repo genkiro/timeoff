@@ -376,9 +376,9 @@ Template.allBalances.events({
                 events: {
                     id: Random.id(),
                     type: 'CASHOUT',
-                    eventStartDate: moment($('#ptoStartDate').val()).toDate(),
-                    length: Number($('#ptoLength').val()),
-                    description: 'Paid: '
+                    eventStartDate: moment($('#cashOutDate').val()).startOf('day').toDate(),
+                    length: Number($('#cashOutLength').val()),
+                    description: $('#cashOutDescription').val()
                 }
             }},
             function () {
@@ -410,7 +410,7 @@ Template.allBalances.events({
     },
     'click #cashOutAll': function (e) {
         e.preventDefault();
-        $('#cashOutLength').val(calc.getFinalBalance(selectedUserId.get()));
+        $('#cashOutLength').val(calc.getDetails(selectedUserId.get()).balance);
     },
     'hidden.bs.modal .modal': function (e) {
         $(e.target).find('form')[0].reset();
@@ -424,20 +424,14 @@ Template.allBalances.helpers({
     events: function () {
         return _.sortBy(PersonnelInfo.findOne(selectedUserId.get()).events, 'eventStartDate');
     },
-    selectedPersonnel: function () {
-        return PersonnelInfo.findOne(selectedUserId.get());
-    },
     selectedUser: function () {
         return Meteor.users.findOne(selectedUserId.get());
     },
     userId: function () {
         return selectedUserId.get();
     },
-    getFinalBalance: function (id) {
-        return calc.getFinalBalance(id);
-    },
-    c: function() {
-        return calc.getCompleteCalc(selectedUserId.get());
+    getBalance: function (id) {
+        return calc.getDetails(id).balance;
     },
     isSelected: function (id) {
         return selectedUserId.get() == id;
@@ -445,5 +439,4 @@ Template.allBalances.helpers({
     details: function () {
         return calc.getDetails(selectedUserId.get());
     }
-
 });

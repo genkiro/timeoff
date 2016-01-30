@@ -9,53 +9,16 @@ calc = {
         var personnel = this.getPersonnel(id);
         return personnel ? moment(personnel.startDate) : null;
     },
-    getAchieved: function (id) {
-        return moment().diff(this.getStartDate(id).startOf('month'), 'month');
-    },
-    getUsages: function (id) {
-        var personnel = this.getPersonnel(id);
-        var sum = 0;
-
-        _.chain(personnel.events)
-         .filter(function (el, i) { return el.type = 'USAGE'; })
-         .each(function (el, i) { sum += el['length']; });
-
-        return sum;
-    },
-    getBeforeExpiration: function (id) {
-        return this.getAchieved(id) - this.getUsages(id);
-    },
-    getExpired: function (id) {
-        return this.getBeforeExpiration(id) - this.getAfterExpiration(id);
-    },
-    getAfterExpiration: function(id) {
-        return Math.min(this.getBeforeExpiration(id), 12);
-    },
-    getFinalBalance: function (id) {
-        return this.getAfterExpiration(id);
-    },
-    getCompleteCalc: function (id) {
-        return {
-            startDate: this.getStartDate(id),
-            achieved: this.getAchieved(id),
-            usages: this.getUsages(id),
-            beforeExpiration: this.getBeforeExpiration(id),
-            expired: this.getExpired(id),
-            afterExpiration: this.getAfterExpiration(id),
-            finalBalance: this.getFinalBalance(id)
-        }
-    },
     getDetails: function (id) {
         if (_.isUndefined(id) || _.isNull(id)) { return; }
 
         var personnel = this.getPersonnel(id);
         var start = this.getStartDate(id);
-        var end = moment();
+        var end = moment().add(1, 'days');
         var i = start;
 
         var plus = [];
         var minus = [];
-
 
         while (i.isSameOrBefore(end)) {
             var nextI = moment(i).add(1, 'months').startOf('month');
@@ -63,11 +26,11 @@ calc = {
             // First of the month
             if (i.date() == 1) {
                 // Achieved one
-                plus.push({ type: 'ACHIEVED', date: i });
+                plus.push({ type: 'ACHIEVED', date: i.format('D MMMM YYYY') });
 
                 // Expire if necessary
                 if ((plus.length - minus.length) > this.expiryLength()) {
-                    minus.push({ type: 'EXPIRED', date: i });
+                    minus.push({ type: 'EXPIRED', date: i.format('D MMMM YYYY') });
                 }
             }
 
@@ -78,8 +41,9 @@ calc = {
 
             _.each(events, function (e) {
                 if (e.type == 'USAGE' || e.type == 'CASHOUT') {
-
-                    minus.push({ type: e.type, date: moment(e.eventStartDate) });
+                    for (var j = 0; j < e.length; j++) {
+                        minus.push({ type: e.type, date: moment(e.eventStartDate).format('D MMMM YYYY') });
+                    }
                 }
             });
 
@@ -87,6 +51,12 @@ calc = {
             i = nextI;
         }
 
-        return _.zip(plus, minus);
+        return {
+            plus: plus,
+            minus: minus,
+            zipped: _.zip(plus, minus),
+            balance: plus.length - minus.length,
+            startDate: this.getStartDate(id)
+        };
     }
 };

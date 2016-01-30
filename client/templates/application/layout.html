@@ -66,7 +66,6 @@
 <template name="allBalances">
     <div class="container">
         <div class="container col-md-3">
-            details: {{details}}
             <table class="table table-hover table-bordered">
                 <thead>
                     <tr class="user">
@@ -76,7 +75,7 @@
                 </thead>
                 <tbody>
                     {{#each user in users}}
-                        <tr data-id="{{user._id}}" class="user {{#if isSelected user._id}}active{{/if}}"><td>{{user.profile.name}}</td><td>{{getFinalBalance user._id}}</td></tr>
+                        <tr data-id="{{user._id}}" class="user {{#if isSelected user._id}}active{{/if}}"><td>{{user.profile.name}}</td><td>{{getBalance user._id}}</td></tr>
                     {{/each}}
                 </tbody>
             </table>
@@ -96,31 +95,11 @@
                         </tr>
                         <tr>
                             <th scope="row">Start Date</th>
-                            <td>{{toSimpleDate c.startDate}}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Achieved</th>
-                            <td class="text-success">{{c.achieved}}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Used</th>
-                            <td class="text-danger">({{c.usages}})</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Before expiration</th>
-                            <td>{{c.beforeExpiration}}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Expired</th>
-                            <td class="text-danger">({{c.expired}})</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">After expiration</th>
-                            <td>{{c.afterExpiration}}</td>
+                            <td>{{toSimpleDate details.startDate}}</td>
                         </tr>
                         <tr class="info">
-                            <th scope="row">Final Balance</th>
-                            <td><strong>{{c.finalBalance}}</strong></td>
+                            <th scope="row">Balance</th>
+                            <td><strong>{{details.balance}}</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -169,35 +148,66 @@
                         </div>
                     </div>
 
-                <div class="modal fade" id="cashOutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabel">Cash Out</h4>
-                            </div>
-                            <div class="modal-body">
-                                <form>
-                                    <div class="form-group">
-                                        <label for="ptoStartDate" class="control-label">Cash out at:</label>
-                                        <input type="date" class="form-control" id="cashOutDate">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="length" class="control-label">How many days are we cashing out?</label>
-                                        <input type="number" class="form-control" id="cashOutLength">
-                                    </div>
-                                    <button type="button" class="btn btn-primary" id="cashOutAll">Use whatever available <span class="badge">{{c.finalBalance}}</span></button>
-                                </form>
-                                <br/><p>Company has to pay this personnel: x * 1.5 * gaji / 22 =?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="addCashOut">Save</button>
+                    <div class="modal fade" id="cashOutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Cash Out</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="ptoStartDate" class="control-label">Cash out at:</label>
+                                            <input type="date" class="form-control" id="cashOutDate">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="length" class="control-label">How many days are we cashing out?</label>
+                                            <input type="number" class="form-control" id="cashOutLength">
+                                        </div>
+                                        <button type="button" class="btn btn-primary" id="cashOutAll">Use whatever available <span class="badge">{{details.balance}}</span></button>
+                                        <br/><p>Company has to pay this personnel: x * 1.5 * gaji / 22 =?</p>
+                                        <div class="form-group">
+                                            <label for="description" class="control-label">Description:</label>
+                                            <textarea class="form-control" id="cashOutDescription"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="addCashOut">Save</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </p>
+
+
+                <table class="table table-bordered table-condensed table-hover">
+                    <colgroup>
+                        <col class="col-xs-1">
+                        <col class="col-xs-2">
+                        <col class="col-xs-1">
+                        <col class="col-xs-2">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>Plus</th>
+                        <th>Date</th>
+                        <th>Minus</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {{#if details.zipped}}
+                            {{#each d in details.zipped}}
+                                <tr><td>{{d.[0].type}}</td><td>{{d.[0].date}}</td><td>{{d.[1].type}}</td><td>{{d.[1].date}}</td></tr>
+                            {{/each}}
+                        {{else}}
+                            <tr><td colspan="4">No details is found.</td></tr>
+                        {{/if}}
+                    </tbody>
+                </table>
 
                 <table class="table table-bordered">
                     <colgroup>
@@ -211,7 +221,7 @@
                         <tr>
                             <th>Type</th>
                             <th>Date</th>
-                            <th>Length (days)</th>
+                            <th>Length</th>
                             <th>Description</th>
                             {{#if isInRolez 'admin'}}<th></th>{{/if}}
                         </tr>
@@ -219,7 +229,7 @@
                     <tbody>
                         {{#if events}}
                             {{#each e in events}}
-                                <tr data-id="{{e.id}}" data-type="{{e.type}}" data-date="{{e.eventStartDate}}" data-description="{{e.description}}"><td>{{e.type}}</td><td>{{toSimpleDate e.eventStartDate}}</td><td>{{e.length}}</td><td class="description">{{e.description}}</td>{{#if isInRolez 'admin'}}<td><button class="btn btn-default btn-sm deleteEvent"><span class="glyphicon glyphicon-remove"></span></button></td>{{/if}}</tr>
+                                <tr data-id="{{e.id}}" data-type="{{e.type}}" data-date="{{e.eventStartDate}}" data-description="{{e.description}}"><td>{{e.type}}</td><td>{{toSimpleDate e.eventStartDate}}</td><td>{{e.length}} day(s)</td><td class="description">{{e.description}}</td>{{#if isInRolez 'admin'}}<td><button class="btn btn-default btn-sm deleteEvent"><span class="glyphicon glyphicon-remove"></span></button></td>{{/if}}</tr>
                             {{/each}}
                         {{else}}
                             <tr><td colspan="4">No event is found.</td></tr>
