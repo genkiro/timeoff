@@ -44,7 +44,12 @@ calc = {
                     for (var j = 0; j < e.length; j++) {
                         minus.push({ type: e.type, date: moment(e.eventStartDate).format('D MMMM YYYY') });
                     }
+                } else if (e.type == 'REDEMPTION') {
+                    for (var j = 0; j < e.length; j++) {
+                        plus.push({ type: e.type, date: moment(e.eventStartDate).format('D MMMM YYYY') });
+                    }
                 }
+
             });
 
             // Next iteration

@@ -4,8 +4,6 @@ console.log('client file');
 Meteor.subscribe("allUserData");
 //Accounts.config({ forbidClientAccountCreation : true }); // put it in the lib folder
 
-var selectedUserId = new Blaze.ReactiveVar();
-
 /* How many rows shown in a page */
 pageSize = 25;
 
@@ -340,103 +338,5 @@ Template.personnels.helpers({
     getSimpleStartDate: function (id) {
         var startDate = calc.getStartDate(id);
         return startDate ? startDate.format('D MMMM YYYY') : '-';
-    }
-});
-
-Template.allBalances.events({
-    'click tr.user': function (e) {
-        e.preventDefault();
-        selectedUserId.set($(e.target).closest('tr').data('id'));
-    },
-    'click #addPTO': function (e) {
-        e.preventDefault();
-
-        PersonnelInfo.upsert(
-            { _id: selectedUserId.get()},
-            { $push: {
-                events: {
-                    id: Random.id(),
-                    type: 'USAGE',
-                    eventStartDate: moment($('#ptoStartDate').val()).toDate(),
-                    length: Number($('#ptoLength').val()),
-                    description: $('#ptoDescription').val()
-                }
-            }},
-            function () {
-                alertify.success('Saved!');
-            }
-        );
-    },
-    'click #addCashOut': function (e) {
-        e.preventDefault();
-
-        PersonnelInfo.upsert(
-            { _id: selectedUserId.get()},
-            { $push: {
-                events: {
-                    id: Random.id(),
-                    type: 'CASHOUT',
-                    eventStartDate: moment($('#cashOutDate').val()).startOf('day').toDate(),
-                    length: Number($('#cashOutLength').val()),
-                    description: $('#cashOutDescription').val()
-                }
-            }},
-            function () {
-                alertify.success('Saved!');
-            }
-        );
-    },
-    'click .deleteEvent': function (e) {
-        e.preventDefault();
-
-        var tr = $(e.target).closest('tr');
-        var id = tr.data('id');
-        var type = tr.data('type');
-        var date = new Date(tr.data('date'));
-        var description = tr.data('description');
-
-        alertify.confirm('Are you sure to delete this ' + type + ' "' + description + '" event at ' + moment(date).format('D MMMM YYYY') + ' ?',
-            function () {
-                PersonnelInfo.update(
-                    { _id: selectedUserId.get() },
-                    { $pull: {
-                        events: { id: id, eventStartDate: date }
-                    } },
-                    function (err) { alertify.success('Deleted'); });
-            },
-            function () { }
-        );
-
-    },
-    'click #cashOutAll': function (e) {
-        e.preventDefault();
-        $('#cashOutLength').val(calc.getDetails(selectedUserId.get()).balance);
-    },
-    'hidden.bs.modal .modal': function (e) {
-        $(e.target).find('form')[0].reset();
-    }
-});
-
-Template.allBalances.helpers({
-    users: function () {
-        return Meteor.users.find({});
-    },
-    events: function () {
-        return _.sortBy(PersonnelInfo.findOne(selectedUserId.get()).events, 'eventStartDate');
-    },
-    selectedUser: function () {
-        return Meteor.users.findOne(selectedUserId.get());
-    },
-    userId: function () {
-        return selectedUserId.get();
-    },
-    getBalance: function (id) {
-        return calc.getDetails(id).balance;
-    },
-    isSelected: function (id) {
-        return selectedUserId.get() == id;
-    },
-    details: function () {
-        return calc.getDetails(selectedUserId.get());
     }
 });
