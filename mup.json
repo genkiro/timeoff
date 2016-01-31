@@ -1,8 +1,7 @@
 {
-  // PIKACHU Server authentication info
   "servers": [
     {
-      "host": "128.199.205.10",
+      "host": "128.199.242.27",
       "username": "root",
       "password": "testpassword1"
       // or pem file (ssh based authentication)
