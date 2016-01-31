@@ -6,7 +6,10 @@ Template.allBalances.events({
     'click tr.user': function (e) {
         e.preventDefault();
         selectedUserId.set($(e.target).closest('tr').data('id'));
-    },
+    }
+});
+
+Template.buttons.events({
     'click #addPTO': function (e) {
         e.preventDefault();
 
@@ -64,28 +67,6 @@ Template.allBalances.events({
             }
         );
     },
-    'click .deleteEvent': function (e) {
-        e.preventDefault();
-
-        var tr = $(e.target).closest('tr');
-        var id = tr.data('id');
-        var type = tr.data('type');
-        var date = new Date(tr.data('date'));
-        var description = tr.data('description');
-
-        alertify.confirm('Are you sure to delete this ' + type + ' "' + description + '" event at ' + moment(date).format('D MMMM YYYY') + ' ?',
-            function () {
-                PersonnelInfo.update(
-                    { _id: selectedUserId.get() },
-                    { $pull: {
-                        events: { id: id, eventStartDate: date }
-                    } },
-                    function (err) { alertify.success('Deleted'); });
-            },
-            function () { }
-        );
-
-    },
     'click #cashOutAll': function (e) {
         e.preventDefault();
         var balance = calc.getDetails(selectedUserId.get()).balance;
@@ -111,15 +92,35 @@ Template.allBalances.events({
     }
 });
 
+Template.eventsTable.events({
+    'click .deleteEvent': function (e) {
+        e.preventDefault();
+
+        var tr = $(e.target).closest('tr');
+        var id = tr.data('id');
+        var type = tr.data('type');
+        var date = new Date(tr.data('date'));
+        var description = tr.data('description');
+
+        alertify.confirm('Are you sure to delete this ' + type + ' "' + description + '" event at ' + moment(date).format('D MMMM YYYY') + ' ?',
+            function () {
+                PersonnelInfo.update(
+                    { _id: selectedUserId.get() },
+                    { $pull: {
+                        events: { id: id, eventStartDate: date }
+                    } },
+                    function (err) { alertify.success('Deleted'); });
+            },
+            function () { }
+        );
+
+    }
+});
+
+
 Template.allBalances.helpers({
     users: function () {
         return Meteor.users.find({});
-    },
-    events: function () {
-        return _.sortBy(PersonnelInfo.findOne(selectedUserId.get()).events, 'eventStartDate');
-    },
-    selectedUser: function () {
-        return Meteor.users.findOne(selectedUserId.get());
     },
     userId: function () {
         return selectedUserId.get();
@@ -129,14 +130,38 @@ Template.allBalances.helpers({
     },
     isSelected: function (id) {
         return selectedUserId.get() == id;
+    }
+});
+
+Template.info.helpers({
+    name: function (id) {
+        return Meteor.users.findOne(id).profile.name;
     },
     details: function () {
-        return calc.getDetails(selectedUserId.get());
+        return calc.getDetails(this.userId);
+    }
+});
+
+Template.buttons.helpers({
+    details: function () {
+        return calc.getDetails(this.userId);
     },
     daysToCashOut: function () {
         return daysToCashOut.get();
     },
     daysToSalvage: function () {
         return daysToRedeem.get();
+    }
+});
+
+Template.balanceTable.helpers({
+    details: function () {
+        return calc.getDetails(this.userId);
+    }
+});
+
+Template.eventsTable.helpers({
+    events: function (id) {
+        return _.sortBy(PersonnelInfo.findOne(id).events, 'eventStartDate');
     }
 });

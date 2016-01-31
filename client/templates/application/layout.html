@@ -15,7 +15,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     {{#if currentUser}}
-                        <li><a href="{{pathFor 'yourBalance'}}" tabindex="-1">Your Balance</a></li>
                         {{#if isInRolez 'admin'}}
                             <li><a href="{{pathFor 'allBalances'}}" tabindex="-1">Everybody's Balance</a></li>
                             <li><a href="{{pathFor 'personnels'}}" tabindex="-1">Personnels</a></li>
@@ -43,23 +42,20 @@
 <template name="homepage">
     <div class="container">
         {{#if currentUser}}
-            <a href="{{pathFor 'yourBalance'}}" class="btn btn-default btn-lg" role="button" style="margin-bottom: 0.5em;"><span class="glyphicon glyphicon-file" style="font-size: 2em;"></span><h3>Your Balance</h3></a>
             {{#if isInRolez 'admin'}}
                 <a href="{{pathFor 'allBalances'}}" class="btn btn-default btn-lg" role="button" style="margin-bottom: 0.5em;"><span class="glyphicon glyphicon-folder-open" style="font-size: 2em;"></span><h3>Everybody's Balances</h3></a>
                 <a href="{{pathFor 'personnels'}}" class="btn btn-default btn-lg" role="button" style="margin-bottom: 0.5em;"><span class="glyphicon glyphicon-user" style="font-size: 2em;"></span><h3>Personnels</h3></a>
             {{/if}}
+
+            {{> info userId=userId}}
+            {{> balanceTable userId=userId}}
+            {{> eventsTable userId=userId}}
         {{else}}
             <div class="jumbotron">
                 <h1>You're not logged in!</h1>
                 <p>If you can't log in, ask your admin.</p>
             </div>
         {{/if}}
-    </div>
-</template>
-
-<template name="yourBalance">
-    <div class="container">
-        Your Balance.
     </div>
 </template>
 
@@ -80,200 +76,214 @@
                 </tbody>
             </table>
         </div>
+
         <div class="container col-md-9">
-
             {{#if userId}}
-                <table class="table table-bordered">
-                    <colgroup>
-                        <col class="col-xs-3">
-                        <col class="col-xs-5">
-                    </colgroup>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Name</th>
-                            <td>{{selectedUser.profile.name}}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Start Date</th>
-                            <td>{{toSimpleDate details.startDate}}</td>
-                        </tr>
-                        <tr class="info">
-                            <th scope="row">Balance</th>
-                            <td><strong>{{details.balance}}</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p>
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#ptoModal">
-                        Use Paid Time Off
-                    </button>
-                    <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#cashOutModal">
-                        Cash Out
-                    </button>
-                    <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#redemptionModal">
-                        Redemption On The Wage
-                    </button>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="ptoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title" id="myModalLabel">Use Paid Time Off</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="form-group">
-                                            <label for="ptoStartDate" class="control-label">PTO starts at:</label>
-                                            <input type="date" class="form-control" id="ptoStartDate">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="length" class="control-label">For how many days?</label>
-                                            <input type="number" class="form-control" id="ptoLength">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="description" class="control-label">Description:</label>
-                                            <textarea class="form-control" id="ptoDescription"></textarea>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="addPTO">Save</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal fade" id="cashOutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title" id="myModalLabel">Cash Out</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="form-group">
-                                            <label for="ptoStartDate" class="control-label">Cash out at:</label>
-                                            <input type="date" class="form-control" id="cashOutDate">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="length" class="control-label">How many days are we cashing out?</label>
-                                            <input type="number" class="form-control" id="cashOutLength">
-                                        </div>
-                                        <button type="button" class="btn btn-primary" id="cashOutAll">Use whatever available <span class="badge">{{details.balance}}</span></button>
-                                        <br/><p>Company has to pay this personnel: {{daysToCashOut}} * 1.5 * gaji / 22 =?</p>
-                                        <div class="form-group">
-                                            <label for="description" class="control-label">Description:</label>
-                                            <textarea class="form-control" id="cashOutDescription"></textarea>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="addCashOut">Save</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal fade" id="redemptionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title" id="myModalLabel">Wage Redemption</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="form-group">
-                                            <label for="ptoStartDate" class="control-label">Wage redemption at:</label>
-                                            <input type="date" class="form-control" id="redemptionDate">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="length" class="control-label">How many days are we salvaging?</label>
-                                            <input type="number" class="form-control" id="redemptionLength">
-                                        </div>
-                                        <button type="button" class="btn btn-primary" id="redemptionAll">Salvage all <span class="badge">{{details.balance}}</span></button>
-                                        <br/><p>Company has cut wage for this personnel: {{daysToSalvage}} * 1.5 * gaji / 22 =?</p>
-                                        <div class="form-group">
-                                            <label for="description" class="control-label">Description:</label>
-                                            <textarea class="form-control" id="redemptionDescription"></textarea>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="addRedemption">Save</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </p>
-
-                <table class="table table-bordered table-condensed table-hover">
-                    <colgroup>
-                        <col class="col-xs-1">
-                        <col class="col-xs-2">
-                        <col class="col-xs-1">
-                        <col class="col-xs-2">
-                    </colgroup>
-                    <thead>
-                    <tr>
-                        <th>Plus</th>
-                        <th>Date</th>
-                        <th>Minus</th>
-                        <th>Date</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {{#if details.zipped}}
-                            {{#each d in details.zipped}}
-                                <tr><td>{{d.[0].type}}</td><td>{{d.[0].date}}</td><td>{{d.[1].type}}</td><td>{{d.[1].date}}</td></tr>
-                            {{/each}}
-                        {{else}}
-                            <tr><td colspan="4">No details is found.</td></tr>
-                        {{/if}}
-                    </tbody>
-                </table>
-
-                <table class="table table-bordered">
-                    <colgroup>
-                        <col class="col-xs-1">
-                        <col class="col-xs-2">
-                        <col class="col-xs-1">
-                        <col class="col-xs-4">
-                        {{#if isInRolez 'admin'}}<col class="col-xs-1">{{/if}}
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Date</th>
-                            <th>Length</th>
-                            <th>Description</th>
-                            {{#if isInRolez 'admin'}}<th></th>{{/if}}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#if events}}
-                            {{#each e in events}}
-                                <tr data-id="{{e.id}}" data-type="{{e.type}}" data-date="{{e.eventStartDate}}" data-description="{{e.description}}"><td>{{e.type}}</td><td>{{toSimpleDate e.eventStartDate}}</td><td>{{e.length}} day(s)</td><td class="description">{{e.description}}</td>{{#if isInRolez 'admin'}}<td><button class="btn btn-default btn-sm deleteEvent"><span class="glyphicon glyphicon-remove"></span></button></td>{{/if}}</tr>
-                            {{/each}}
-                        {{else}}
-                            <tr><td colspan="4">No event is found.</td></tr>
-                        {{/if}}
-                    </tbody>
-                </table>
-
+                {{> info userId=userId}}
+                {{> buttons userId=userId}}
+                {{> balanceTable userId=userId}}
+                {{> eventsTable userId=userId}}
             {{else}}
                 <div class="well"><strong>← Select one</strong></div>
             {{/if}}
         </div>
     </div>
+</template>
+
+<template name="info">
+    <table class="table table-bordered">
+        <colgroup>
+            <col class="col-xs-3">
+            <col class="col-xs-5">
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row">Name</th>
+            <td>{{name userId}}</td>
+        </tr>
+        <tr>
+            <th scope="row">Start Date</th>
+            <td>{{toSimpleDate details.startDate}}</td>
+        </tr>
+        <tr class="info">
+            <th scope="row">Balance</th>
+            <td><strong>{{details.balance}}</strong></td>
+        </tr>
+        </tbody>
+    </table>
+</template>
+
+<template name="buttons">
+    <p>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#ptoModal">
+            Use Paid Time Off
+        </button>
+        <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#cashOutModal">
+            Cash Out
+        </button>
+        <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#redemptionModal">
+            Redemption On The Wage
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="ptoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Use Paid Time Off</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="ptoStartDate" class="control-label">PTO starts at:</label>
+                                <input type="date" class="form-control" id="ptoStartDate">
+                            </div>
+                            <div class="form-group">
+                                <label for="length" class="control-label">For how many days?</label>
+                                <input type="number" class="form-control" id="ptoLength">
+                            </div>
+                            <div class="form-group">
+                                <label for="description" class="control-label">Description:</label>
+                                <textarea class="form-control" id="ptoDescription"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addPTO">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="cashOutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Cash Out</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="ptoStartDate" class="control-label">Cash out at:</label>
+                                <input type="date" class="form-control" id="cashOutDate">
+                            </div>
+                            <div class="form-group">
+                                <label for="length" class="control-label">How many days are we cashing out?</label>
+                                <input type="number" class="form-control" id="cashOutLength">
+                            </div>
+                            <button type="button" class="btn btn-primary" id="cashOutAll">Use whatever available <span class="badge">{{details.balance}}</span></button>
+                            <br/><p>Company has to pay this personnel: {{daysToCashOut}} * 1.5 * gaji / 22 =?</p>
+                            <div class="form-group">
+                                <label for="description" class="control-label">Description:</label>
+                                <textarea class="form-control" id="cashOutDescription"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addCashOut">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="redemptionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Wage Redemption</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="ptoStartDate" class="control-label">Wage redemption at:</label>
+                                <input type="date" class="form-control" id="redemptionDate">
+                            </div>
+                            <div class="form-group">
+                                <label for="length" class="control-label">How many days are we salvaging?</label>
+                                <input type="number" class="form-control" id="redemptionLength">
+                            </div>
+                            <button type="button" class="btn btn-primary" id="redemptionAll">Salvage all <span class="badge">{{details.balance}}</span></button>
+                            <br/><p>Company has cut wage for this personnel: {{daysToSalvage}} * 1.5 * gaji / 22 =?</p>
+                            <div class="form-group">
+                                <label for="description" class="control-label">Description:</label>
+                                <textarea class="form-control" id="redemptionDescription"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addRedemption">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p>
+</template>
+
+<template name="balanceTable">
+    <h3>Balance Table</h3>
+    <table class="table table-bordered table-condensed table-hover">
+        <colgroup>
+            <col class="col-xs-1">
+            <col class="col-xs-2">
+            <col class="col-xs-1">
+            <col class="col-xs-2">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>Plus</th>
+            <th>Date</th>
+            <th>Minus</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#if details.zipped}}
+            {{#each d in details.zipped}}
+                <tr><td>{{d.[0].type}}</td><td>{{d.[0].date}}</td><td>{{d.[1].type}}</td><td>{{d.[1].date}}</td></tr>
+            {{/each}}
+        {{else}}
+            <tr><td colspan="5">No details is found.</td></tr>
+        {{/if}}
+        </tbody>
+    </table>
+</template>
+
+<template name="eventsTable">
+    <h3>Events</h3>
+    <table class="table table-bordered">
+        <colgroup>
+            <col class="col-xs-1">
+            <col class="col-xs-2">
+            <col class="col-xs-1">
+            <col class="col-xs-4">
+            {{#if isInRolez 'admin'}}<col class="col-xs-1">{{/if}}
+        </colgroup>
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Length</th>
+            <th>Description</th>
+            {{#if isInRolez 'admin'}}<th></th>{{/if}}
+        </tr>
+        </thead>
+        <tbody>
+        {{#if events userId}}
+            {{#each e in events userId}}
+                <tr data-id="{{e.id}}" data-type="{{e.type}}" data-date="{{e.eventStartDate}}" data-description="{{e.description}}"><td>{{e.type}}</td><td>{{toSimpleDate e.eventStartDate}}</td><td>{{e.length}} day(s)</td><td class="description">{{e.description}}</td>{{#if isInRolez 'admin'}}<td><button class="btn btn-default btn-sm deleteEvent"><span class="glyphicon glyphicon-remove"></span></button></td>{{/if}}</tr>
+            {{/each}}
+        {{else}}
+            <tr><td colspan="4">No event is found.</td></tr>
+        {{/if}}
+        </tbody>
+    </table>
 </template>
 
 <template name="personnels">
@@ -295,452 +305,6 @@
                 {{/each}}
             </tbody>
         </table>
-    </div>
-</template>
-
-<template name="settings">
-    <div class="container">
-        <div class="jumbotron">
-            <h1>Settings</h1>
-            <p>This is where you can change the constants used when doing calculation. These values rarely change, therefore we'll save time on the input process by keeping it as constants.</p>
-        </div>
-            <div class="container col-sm-6">
-                <form class="form-horizontal">
-
-                    <h3>Pre-press</h3>
-                    <div class="form-group">
-                        <label for="materialCost" class="col-sm-4 control-label">Pre-press Material Cost</label>
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                                <span class="input-group-addon">Rp.</span>
-                                <input type="text" class="form-control rupiah" id="materialCost" placeholder="1 500 000" value="{{settings.materialCost}}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="safetyFactor" class="col-sm-4 control-label">Pre-press Safety Factor</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="safetyFactor" placeholder="2" value="{{settings.safetyFactor}}">
-                        </div>
-                    </div>
-                    <h3>Manufacturing Process</h3>
-                    <div class="form-group">
-                        <label for="operatorCost" class="col-sm-4 control-label">Operator Cost</label>
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                                <span class="input-group-addon">Rp.</span>
-                                <input type="text" class="form-control rupiah" id="operatorCost" placeholder="13 000" value="{{settings.operatorCost}}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="efficiencyFactor" class="col-sm-4 control-label">Efficiency Factor</label>
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="efficiencyFactor" placeholder="75" value="{{settings.efficiencyFactor}}">
-                                <span class="input-group-addon">%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <h3>Waste</h3>
-                    <div class="form-group">
-                        <label for="operatorWastePercent" class="col-sm-4 control-label">Operator Waste Percent</label>
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="operatorWastePercent" placeholder="5" value="{{settings.operatorWastePercent}}">
-                                <span class="input-group-addon">%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <p class="text-info">Last updated: {{settings.timeCreated}}</p>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <br/>&nbsp;
-                </form>
-
-            </div>
-            <div class="container col-sm-6">
-                <h3>Types of Machines</h3>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Speed</th>
-                            <th>Setup Time</th>
-                            <th># of Operator</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each machines}}
-                            <tr data-id="{{_id}}"><td>{{name}}</td><td>{{speed}}</td><td>{{setupTime}} jam</td><td>{{nOperator}}</td><td><button class="btn btn-danger btn-sm deleteMachine"><span class="glyphicon glyphicon-remove"></span></button></td></tr>
-                        {{/each}}
-                        <tr>
-                            <td><input type="text" id="newMachineName" class="form-control" placeholder="Rotary"></td>
-                            <td><input type="text" id="newMachineSpeed" class="form-control number" placeholder="5"></td>
-                            <td><input type="text" id="newMachineSetupTime" class="form-control number" placeholder="4"></td>
-                            <td><input type="text" id="newMachineNOperator" class="form-control number" placeholder="2"></td>
-                            <td><button class="btn btn-primary btn-sm" id="addMachine"><span class="glyphicon glyphicon-plus"></span></button></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3>Types of Papers</h3>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each papers}}
-                            <tr data-id="{{_id}}"><td>{{name}}</td><td>Rp. {{price}}</td><td><button class="btn btn-danger btn-sm deletePaper"><span class="glyphicon glyphicon-remove"></span></button></td></tr>
-                        {{/each}}
-                        <tr>
-                            <td><input type="text" id="newPaperName" class="form-control" placeholder="Stc Transparant"></td>
-                            <td><input type="text" id="newPaperPrice" class="form-control number" placeholder="4981"></td>
-                            <td><button class="btn btn-primary btn-sm" id="addPaper"><span class="glyphicon glyphicon-plus"></span></button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        &nbsp;
-    </div>
-</template>
-
-<template name="inputList">
-    <div class="container">
-        <table class="table table-responsive table-hover">
-            <thead>
-                <tr>
-                    <th>_id</th>
-                    {{#if isInRole 'admin' 'default-group'}}
-                        <th></th>
-                    {{/if}}
-                    <th></th>
-                    <th>Customer</th>
-                    <th>Entry Date</th>
-                    <th>Kode Barang</th>
-                    <th>Order Name</th>
-                    <th>Quantity</th>
-                    <th>Design Baru/Lama</th>
-                    <th>Product Length</th>
-                    <th>Product Width</th>
-                    <th>Paper Type</th>
-                    <th>Die Length</th>
-                    <th>Die Width</th>
-                    <th>Total Pieces In 1 Die</th>
-                    <th>Number of Color (die)</th>
-                    <th>Machine Name</th>
-                    <th>Ink Cost/Paper Cost in %</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each inputs}}
-                    {{> input}}
-                {{else}}
-                    <tr>
-                        <td>Kosong</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                {{/each}}
-            </tbody>
-        </table>
-        <a class="btn btn-primary" href="{{pathFor 'inputCreate'}}">Create New</a>
-    </div>
-</template>
-
-<template name="input">
-    <tr>
-        <td>{{_id}}</td>
-        {{#if isInRole 'admin' 'default-group'}}
-            <td><a href="{{pathFor 'calculation' _id=this._id}}" class="btn btn-default">Calculate</a></td>
-        {{/if}}
-        <td><a href="{{pathFor 'inputEdit' _id=this._id}}" class="btn btn-default">Edit</a></td>
-        <td>{{customer}}</td>
-        <td>{{entryDate}}</td>
-        <td>{{itemCode}}</td>
-        <td>{{orderName}}</td>
-        <td>{{quantity}}</td>
-        <td>{{designAge}}</td>
-        <td>{{prodLength}}</td>
-        <td>{{prodWidth}}</td>
-        <td>{{paperType}}</td>
-        <td>{{dieLength}}</td>
-        <td>{{dieWidth}}</td>
-        <td>{{totalPiecesInDie}}</td>
-        <td>{{nDieColor}}</td>
-        <td>{{machineName}}</td>
-        <td>{{inkPaperCostPercent}} %</td>
-    </tr>
-</template>
-
-<template name="inputCreate">
-    <div class="container">
-        <div class="jumbotron">
-            <h1>Create Input</h1>
-            <p>This is where we insert the inquiries for precosting. This is the starting point.</p>
-        </div>
-        {{> inputForm}}
-    </div>
-</template>
-
-<template name="inputEdit">
-    <div class="container">
-        <div class="jumbotron">
-            <h1>Edit Input</h1>
-            <p>Input ID: {{input._id}}</p>
-        </div>
-
-        {{> inputForm input=input}}
-    </div>
-</template>
-
-<template name="inputForm">
-    <form class="form-horizontal">
-        <h3>General</h3>
-        <div class="form-group">
-            <label for="customer" class="col-sm-2 control-label">Customer</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="customer" placeholder="Liana Gonta, Ibu" value="{{input.customer}}">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="entryDate" class="col-sm-2 control-label">Entry Date</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control date" id="entryDate">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="itemCode" class="col-sm-2 control-label">Kode Barang</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="itemCode" placeholder="M001/LISII0010" value="{{input.itemCode}}">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="orderName" class="col-sm-2 control-label">Order Name</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="orderName" placeholder="St Jumble Juice Kangen Water" value="{{input.orderName}}">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="quantity" class="col-sm-2 control-label">Quantity</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control integer" id="quantity" placeholder="10 000" value="{{input.quantity}}">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="designAge" class="col-sm-2 control-label">Design Baru / Lama</label>
-            <div class="col-sm-6">
-                <div class="input-group">
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="designAge" id="newDesign" value="BARU" checked>
-                            Baru
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="designAge" id="oldDesign" value="LAMA">
-                            Lama
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <h3>Dimensions</h3>
-        <div class="form-group">
-            <label for="prodLength" class="col-sm-2 control-label">Product Length</label>
-            <div class="col-sm-3">
-                <div class="input-group">
-                    <input type="text" class="form-control decimal" id="prodLength" placeholder="6.08" value="{{input.prodLength}}">
-                    <span class="input-group-addon">meter(s)</span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="prodWidth" class="col-sm-2 control-label">Product Width</label>
-            <div class="col-sm-3">
-                <div class="input-group">
-                    <input type="text" class="form-control decimal" id="prodWidth" placeholder="9.92" value="{{input.prodWidth}}">
-                    <span class="input-group-addon">meter(s)</span>
-                </div>
-            </div>
-        </div>
-        <h3>Material</h3>
-        <div class="form-group">
-            <label for="paperType" class="col-sm-2 control-label">Paper Type</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="paperType" placeholder="Stc Transparant" value="{{input.paperType}}">
-            </div>
-        </div>
-        <h3>Cylinder & Die</h3>
-        <div class="form-group">
-            <label for="dieLength" class="col-sm-2 control-label">Die Length</label>
-            <div class="col-sm-3">
-                <div class="input-group">
-                    <input type="text" class="form-control decimal" id="dieLength" placeholder="1.018" value="{{input.dieLength}}">
-                    <span class="input-group-addon">meter(s)</span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="dieWidth" class="col-sm-2 control-label">Die Width</label>
-            <div class="col-sm-3">
-                <div class="input-group">
-                    <input type="text" class="form-control decimal" id="dieWidth" placeholder="0.135" value="{{input.dieWidth}}">
-                    <span class="input-group-addon">meter(s)</span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="totalPiecesInDie" class="col-sm-2 control-label">Total Pieces In Die</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control integer" id="totalPiecesInDie" placeholder="2" value="{{input.totalPiecesInDie}}">
-            </div>
-        </div>
-
-        <h3>Pre-press</h3>
-        <div class="form-group">
-            <label for="nDieColor" class="col-sm-2 control-label">Number of Color (die)</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control integer" id="nDieColor" placeholder="2" value="{{input.nDieColor}}">
-            </div>
-        </div>
-
-        <h3>Manufacturing Process</h3>
-        <div class="form-group">
-            <label for="machineName" class="col-sm-2 control-label">Machine Name</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="machineName" placeholder="Rotary" value="{{input.machineName}}">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="inkPaperCostPercent" class="col-sm-2 control-label">Ink Cost / Paper Cost in %</label>
-            <div class="col-sm-3">
-                <div class="input-group">
-                    <input type="text" class="form-control integer" id="inkPaperCostPercent" placeholder="10" value="{{input.inkPaperCostPercent}}">
-                    <span class="input-group-addon">%</span>
-                </div>
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    &nbsp;
-</template>
-
-<template name="output">
-    <div class="container">
-        <table class="table table-responsive table-hover">
-            <thead>
-            <tr>
-                <th>_id</th>
-                <th>Customer</th>
-                <th>Entry Date</th>
-                <th>Kode Barang</th>
-                <th>Order Name</th>
-                <th>Quantity</th>
-                <th>Design Baru/Lama</th>
-                <th>Product Length</th>
-                <th>Product Width</th>
-                <th>Paper Type</th>
-                <th>Paper Price</th>
-                <th>Die Length</th>
-                <th>Die Width</th>
-                <th>Total Pieces In 1 Die</th>
-                <th>Number of Color (die)</th>
-                <th>Machine Name</th>
-                <th>Machine Speed</th>
-                <th>Setup Time</th>
-                <th>Number of Operator</th>
-                <th>HPP</th>
-                <th>Offer Profit Margin</th>
-                <th>Offer Price (per piece)</th>
-                <th>Total Sales Price</th>
-                <th>Total Profit</th>
-                <th>When it's saved to output</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{#each outputs}}
-                <tr>
-                    <td>{{_id}}</td>
-                    <td>{{customer}}</td>
-                    <td>{{entryDate}}</td>
-                    <td>{{itemCode}}</td>
-                    <td>{{orderName}}</td>
-                    <td>{{quantity}}</td>
-                    <td>{{designAge}}</td>
-                    <td>{{prodLength}}</td>
-                    <td>{{prodWidth}}</td>
-                    <td>{{paperType}}</td>
-                    <td>{{rp paperPrice}}</td>
-                    <td>{{dieLength}}</td>
-                    <td>{{dieWidth}}</td>
-                    <td>{{totalPiecesInDie}}</td>
-                    <td>{{nDieColor}}</td>
-                    <td>{{machineName}}</td>
-                    <td>{{machineSpeed}}</td>
-                    <td>{{setupTime}}</td>
-                    <td>{{nOperator}}</td>
-                    <td>{{rp totCostPerPiece}}</td>
-                    <td>{{profitMarginOffered}}</td>
-                    <td>{{rp pricePerPieceOffered}}</td>
-                    <td>{{rp totSalesPrice}}</td>
-                    <td>{{rp totProfit}}</td>
-                    <td class="text-muted">{{timeCreated}}</td>
-                </tr>
-            {{else}}
-                <tr>
-                    <td>Loh, jek kosong</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            {{/each}}
-            </tbody>
-        </table>
-        <div class="container text-center"><button class="btn btn-default" id="loadMoreOutputs">Previous</button></div>
-        &nbsp;
     </div>
 </template>
 
