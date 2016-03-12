@@ -216,6 +216,12 @@ Template.allBalances.helpers({
 });
 
 Template.info.helpers({
+    accountNotReady: function (id) {
+        var user = Meteor.users.findOne(id);
+        var personnel = PersonnelInfo.findOne({_id: id });
+
+        return !(user.profile.name && personnel && personnel.startDate);
+    },
     name: function (id) {
         return Meteor.users.findOne(id).profile.name;
     },

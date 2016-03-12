@@ -95,6 +95,7 @@
 </template>
 
 <template name="info">
+    {{#if (accountNotReady userId)}}<h3>To admin: please set this person's start date & name.</h3>{{/if}}
     <table class="table table-bordered">
         <colgroup>
             <col class="col-xs-3">
