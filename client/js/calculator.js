@@ -53,6 +53,7 @@ calc = {
             }).sortBy('eventStartDate').value();
 
             _.each(events, function (e) {
+                // Properly put the event on the PTO balance sheet
                 if (e.type == 'DIPAKAI' || e.type == 'DIUANGKAN') {
                     for (var j = 0; j < e.length; j++) {
                         ptoMinus.push({ type: e.type, date: moment(e.eventStartDate).format(dateFormat) });
@@ -63,6 +64,16 @@ calc = {
                     }
                 }
 
+                // Properly put the event on the sick days balance sheet
+                if (e.type == 'S_DIPAKAI' || e.type == 'S_DIUANGKAN') {
+                    for (var j = 0; j < e.length; j++) {
+                        sickDaysMinus.push({ type: e.type, date: moment(e.eventStartDate).format(dateFormat) });
+                    }
+                } else if (e.type == 'S_KREDIT') {
+                    for (var j = 0; j < e.length; j++) {
+                        sickDaysPlus.push({ type: e.type, date: moment(e.eventStartDate).format(dateFormat) });
+                    }
+                }
             });
 
             // Next iteration

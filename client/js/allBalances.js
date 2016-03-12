@@ -162,6 +162,8 @@ Template.sickDaysButtons.events({
 });
 
 Template.eventsTable.events({
+    //TODO: check bug when we keep on deleting events on the same row
+
     'click .deleteEvent': function (e) {
         e.preventDefault();
 
@@ -186,7 +188,7 @@ Template.eventsTable.events({
 
                         alertify.success('Deleted'); });
             },
-            function () { }
+            function () { alertify.error('Canceled.') }
         );
 
     }
