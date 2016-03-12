@@ -447,7 +447,16 @@
             </thead>
             <tbody>
                 {{#each user in users}}
-                    <tr data-id="{{user._id}}"><td>{{user.profile.name}}</td><td><button class="btn btn-default btn-sm editName"><span class="glyphicon glyphicon-pencil"></span></button></td><td>{{#each e in user.emails}}{{e.address}} {{/each}}</td><td>{{getSimpleStartDate user._id}}</td><td><button class="btn btn-default btn-sm editStartDate"><span class="glyphicon glyphicon-pencil"></span></button></td></tr>
+                    <tr data-id="{{user._id}}">
+                        <td>{{user.profile.name}}</td>
+                        <td><button class="btn btn-default btn-sm editName"><span class="glyphicon glyphicon-pencil"></span></button></td>
+                        <td>{{#each e in user.emails}}{{e.address}} {{/each}}</td>
+                        <td>{{getSimpleStartDate user._id}}</td>
+                        <td>
+                            <button class="btn btn-default btn-sm editStartDate"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;
+                            <button class="btn btn-danger btn-sm deleteUser"><span class="glyphicon glyphicon-trash"></span></button>
+                        </td>
+                    </tr>
                 {{/each}}
             </tbody>
         </table>

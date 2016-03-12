@@ -107,6 +107,33 @@ Template.personnels.events({
                 alertify.error('Cancel');
             }
         ).set('type', 'text');
+    },
+    'click .deleteUser': function (e) {
+        e.preventDefault();
+
+        var userId = $(e.target).closest('tr').data('id');
+        var user = Meteor.users.findOne({_id: userId});
+        var name = user.profile.name;
+        var email = _.pluck(user.emails, 'address').join();
+
+        alertify.confirm('Are you sure you want to delete user "' + name + '" (' + email +') ?',
+            function (evt, newName) {
+                if (userId == Meteor.userId()) {
+                    alertify.error('You cannot delete yourself.');
+                } else {
+                    Meteor.users.remove({ _id: userId }, function (error, result) {
+                        if (error) {
+                            alertify.error("Error removing user: ", error);
+                        } else {
+                            alertify.success('Deleted');
+                        }
+                    })
+                }
+            },
+            function () {
+                alertify.error('Cancel');
+            }
+        );
     }
 });
 
