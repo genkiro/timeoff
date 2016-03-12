@@ -1,7 +1,8 @@
+var ptoExpiryLength = 12;
+var sickDaysExpiryLength = 6;
+var dateFormat = 'D MMMM YYYY';
+
 calc = {
-    expiryLength: function () {
-        return 12;
-    },
     getPersonnel: function (id) {
         return PersonnelInfo.findOne({_id: id});
     },
@@ -17,20 +18,32 @@ calc = {
         var end = moment().add(1, 'days');
         var i = start;
 
-        var plus = [];
-        var minus = [];
+        var ptoPlus = [];
+        var ptoMinus = [];
+        var sickDaysPlus = [];
+        var sickDaysMinus = [];
 
         while (i.isSameOrBefore(end)) {
             var nextI = moment(i).add(1, 'months').startOf('month');
 
             // First of the month
             if (i.date() == 1) {
-                // Achieved one
-                plus.push({ type: 'ACHIEVED', date: i.format('D MMMM YYYY') });
+                // Achieved one PTO
+                ptoPlus.push({ type: 'DIPEROLEH', date: i.format(dateFormat) });
 
-                // Expire if necessary
-                if ((plus.length - minus.length) > this.expiryLength()) {
-                    minus.push({ type: 'EXPIRED', date: i.format('D MMMM YYYY') });
+                // Achieved one sick day every couple of month
+                if ((i.month() % 2) != (start.month() % 2)) {
+                    sickDaysPlus.push({ type: 'S_DIPEROLEH', date: i.format(dateFormat) })
+                }
+
+                // Expire PTO if necessary
+                if ((ptoPlus.length - ptoMinus.length) > ptoExpiryLength) {
+                    ptoMinus.push({ type: 'KADALUARSA', date: i.format(dateFormat) });
+                }
+
+                // Expire sick days if necessary
+                if ((sickDaysPlus.length - sickDaysMinus.length) > sickDaysExpiryLength) {
+                    sickDaysMinus.push({ type: 'S_KADALUARSA', date: i.format(dateFormat) });
                 }
             }
 
@@ -40,13 +53,13 @@ calc = {
             }).sortBy('eventStartDate').value();
 
             _.each(events, function (e) {
-                if (e.type == 'USAGE' || e.type == 'CASHOUT') {
+                if (e.type == 'DIPAKAI' || e.type == 'DIUANGKAN') {
                     for (var j = 0; j < e.length; j++) {
-                        minus.push({ type: e.type, date: moment(e.eventStartDate).format('D MMMM YYYY') });
+                        ptoMinus.push({ type: e.type, date: moment(e.eventStartDate).format(dateFormat) });
                     }
-                } else if (e.type == 'REDEMPTION') {
+                } else if (e.type == 'KREDIT') {
                     for (var j = 0; j < e.length; j++) {
-                        plus.push({ type: e.type, date: moment(e.eventStartDate).format('D MMMM YYYY') });
+                        ptoPlus.push({ type: e.type, date: moment(e.eventStartDate).format(dateFormat) });
                     }
                 }
 
@@ -57,11 +70,11 @@ calc = {
         }
 
         return {
-            plus: plus,
-            minus: minus,
-            zipped: _.zip(plus, minus),
-            balance: plus.length - minus.length,
-            startDate: this.getStartDate(id)
+            startDate: this.getStartDate(id),
+            ptoZipped: _.zip(ptoPlus, ptoMinus),
+            ptoBalance: ptoPlus.length - ptoMinus.length,
+            sickDaysZipped: _.zip(sickDaysPlus, sickDaysMinus),
+            sickDaysBalance: sickDaysPlus.length - sickDaysMinus.length
         };
     }
 };

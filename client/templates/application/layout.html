@@ -48,7 +48,8 @@
             {{/if}}
 
             {{> info userId=userId}}
-            {{> balanceTable userId=userId}}
+            {{> ptoBalanceTable userId=userId}}
+            {{> sickDaysBalanceTable userId=userId}}
             {{> eventsTable userId=userId}}
         {{else}}
             <div class="jumbotron">
@@ -66,12 +67,13 @@
                 <thead>
                     <tr class="user">
                         <th>Name</th>
-                        <th>Balance</th>
+                        <th>Cuti Libur</th>
+                        <th>Cuti Sakit</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{#each user in users}}
-                        <tr data-id="{{user._id}}" class="user {{#if isSelected user._id}}active{{/if}}"><td>{{user.profile.name}}</td><td>{{getBalance user._id}}</td></tr>
+                        <tr data-id="{{user._id}}" class="user {{#if isSelected user._id}}active{{/if}}"><td>{{user.profile.name}}</td><td>{{getPtoBalance user._id}}</td><td>{{getSickDaysBalance user._id}}</td></tr>
                     {{/each}}
                 </tbody>
             </table>
@@ -80,8 +82,10 @@
         <div class="container col-md-9">
             {{#if userId}}
                 {{> info userId=userId}}
-                {{> buttons userId=userId}}
-                {{> balanceTable userId=userId}}
+                {{> ptoButtons userId=userId}}
+                {{> ptoBalanceTable userId=userId}}
+                {{> sickDaysBalanceTable userId=userId}}
+                {{> sickDaysButtons userId=userId}}
                 {{> eventsTable userId=userId}}
             {{else}}
                 <div class="well"><strong>← Select one</strong></div>
@@ -106,24 +110,28 @@
             <td>{{toSimpleDate details.startDate}}</td>
         </tr>
         <tr class="info">
-            <th scope="row">Balance</th>
-            <td><strong>{{details.balance}}</strong></td>
+            <th scope="row">Saldo Cuti Libur</th>
+            <td><strong>{{details.ptoBalance}}</strong></td>
+        </tr>
+        <tr class="info">
+            <th scope="row">Saldo Cuti Sakit</th>
+            <td><strong>{{details.sickDaysBalance}}</strong></td>
         </tr>
         </tbody>
     </table>
 </template>
 
-<template name="buttons">
+<template name="ptoButtons">
     <p>
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#ptoModal">
-            Use Paid Time Off
+            Pakai Cuti Libur
         </button>
         <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#cashOutModal">
-            Cash Out
+            Uangkan Cuti Libur
         </button>
-        <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#redemptionModal">
-            Redemption On The Wage
+        <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#creditModal">
+            Kredit Cuti Libur
         </button>
 
         <!-- Modal -->
@@ -132,27 +140,27 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Use Paid Time Off</h4>
+                        <h4 class="modal-title" id="myModalLabel">Pakai Cuti Libur</h4>
                     </div>
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
-                                <label for="ptoStartDate" class="control-label">PTO starts at:</label>
+                                <label for="ptoStartDate" class="control-label">Cuti pada tanggal:</label>
                                 <input type="date" class="form-control" id="ptoStartDate">
                             </div>
                             <div class="form-group">
-                                <label for="length" class="control-label">For how many days?</label>
-                                <input type="number" class="form-control" id="ptoLength">
+                                <label for="ptoLength" class="control-label">Untuk berapa hari?</label>
+                                <input type="number" min="1" class="form-control" id="ptoLength">
                             </div>
                             <div class="form-group">
-                                <label for="description" class="control-label">Description:</label>
+                                <label for="ptoDescription" class="control-label">Description:</label>
                                 <textarea class="form-control" id="ptoDescription"></textarea>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addPTO">Save</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addPto">Save</button>
                     </div>
                 </div>
             </div>
@@ -163,62 +171,60 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Cash Out</h4>
+                        <h4 class="modal-title" id="myModalLabel">Uangkan Cuti Libur</h4>
                     </div>
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
-                                <label for="ptoStartDate" class="control-label">Cash out at:</label>
-                                <input type="date" class="form-control" id="cashOutDate">
+                                <label for="cashOutPtoDate" class="control-label">Uangkan pada tanggal:</label>
+                                <input type="date" class="form-control" id="cashOutPtoDate">
                             </div>
                             <div class="form-group">
-                                <label for="length" class="control-label">How many days are we cashing out?</label>
-                                <input type="number" class="form-control" id="cashOutLength">
+                                <label for="cashOutPtoLength" class="control-label">Berapa hari yang diuangkan?</label>
+                                <input type="number" min="1" class="form-control" id="cashOutPtoLength">
                             </div>
-                            <button type="button" class="btn btn-primary" id="cashOutAll">Use whatever available <span class="badge">{{details.balance}}</span></button>
-                            <br/><p>Company has to pay this personnel: {{daysToCashOut}} * 1.5 * gaji / 22 =?</p>
+                            <button type="button" class="btn btn-primary" id="cashOutAllPto">Bring to zero <span class="badge">{{details.ptoBalance}}</span></button>
                             <div class="form-group">
-                                <label for="description" class="control-label">Description:</label>
-                                <textarea class="form-control" id="cashOutDescription"></textarea>
+                                <label for="cashOutPtoDescription" class="control-label">Description:</label>
+                                <textarea class="form-control" id="cashOutPtoDescription"></textarea>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addCashOut">Save</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addCashOutPto">Save</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="modal fade" id="redemptionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="creditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Wage Redemption</h4>
+                        <h4 class="modal-title" id="myModalLabel">Kredit Cuti Libur</h4>
                     </div>
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
-                                <label for="ptoStartDate" class="control-label">Wage redemption at:</label>
-                                <input type="date" class="form-control" id="redemptionDate">
+                                <label for="creditPtoStartDate" class="control-label">Dikreditkan pada tanggal:</label>
+                                <input type="date" class="form-control" id="creditPtoStartDate">
                             </div>
                             <div class="form-group">
-                                <label for="length" class="control-label">How many days are we salvaging?</label>
-                                <input type="number" class="form-control" id="redemptionLength">
+                                <label for="creditPtoLength" class="control-label">Kreditkan untuk berapa hari?</label>
+                                <input type="number" min="1" class="form-control" id="creditPtoLength">
                             </div>
-                            <button type="button" class="btn btn-primary" id="redemptionAll">Salvage all <span class="badge">{{details.balance}}</span></button>
-                            <br/><p>Company has cut wage for this personnel: {{daysToSalvage}} * 1.5 * gaji / 22 =?</p>
+                            <button type="button" class="btn btn-primary" id="creditAllPto">Bring to zero <span class="badge">{{details.ptoBalance}}</span></button>
                             <div class="form-group">
-                                <label for="description" class="control-label">Description:</label>
-                                <textarea class="form-control" id="redemptionDescription"></textarea>
+                                <label for="creditPtoDescription" class="control-label">Description:</label>
+                                <textarea class="form-control" id="creditPtoDescription"></textarea>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addRedemption">Save</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addCreditPto">Save</button>
                     </div>
                 </div>
             </div>
@@ -226,8 +232,8 @@
     </p>
 </template>
 
-<template name="balanceTable">
-    <h3>Balance Table</h3>
+<template name="ptoBalanceTable">
+    <h3>Tabel Cuti Liburan</h3>
     <table class="table table-bordered table-condensed table-hover">
         <colgroup>
             <col class="col-xs-1">
@@ -244,8 +250,8 @@
         </tr>
         </thead>
         <tbody>
-        {{#if details.zipped}}
-            {{#each d in details.zipped}}
+        {{#if details.ptoZipped}}
+            {{#each d in details.ptoZipped}}
                 <tr><td>{{d.[0].type}}</td><td>{{d.[0].date}}</td><td>{{d.[1].type}}</td><td>{{d.[1].date}}</td></tr>
             {{/each}}
         {{else}}
@@ -253,6 +259,146 @@
         {{/if}}
         </tbody>
     </table>
+</template>
+
+<template name="sickDaysBalanceTable">
+    <h3>Tabel Cuti Sakit</h3>
+    <table class="table table-bordered table-condensed table-hover">
+        <colgroup>
+            <col class="col-xs-1">
+            <col class="col-xs-2">
+            <col class="col-xs-1">
+            <col class="col-xs-2">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>Plus</th>
+            <th>Date</th>
+            <th>Minus</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#if details.sickDaysZipped}}
+            {{#each d in details.sickDaysZipped}}
+                <tr><td>{{d.[0].type}}</td><td>{{d.[0].date}}</td><td>{{d.[1].type}}</td><td>{{d.[1].date}}</td></tr>
+            {{/each}}
+        {{else}}
+            <tr><td colspan="5">No details is found.</td></tr>
+        {{/if}}
+        </tbody>
+    </table>
+</template>
+
+<template name="sickDaysButtons">
+    <p>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#sickDaysModal">
+            Pakai Cuti Sakit
+        </button>
+        <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#cashOutSickDaysModal">
+            Uangkan Cuti Sakit
+        </button>
+        <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#creditSickDaysModal">
+            Kredit Cuti Sakit
+        </button>
+
+        <!-- Modal -->
+    <div class="modal fade" id="sickDaysModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Pakai Cuti Sakit</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="sickDaysStartDate" class="control-label">Cuti pada tanggal:</label>
+                            <input type="date" class="form-control" id="sickDaysStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="sickDaysLength" class="control-label">Untuk berapa hari?</label>
+                            <input type="number" min="1" class="form-control" id="sickDaysLength">
+                        </div>
+                        <div class="form-group">
+                            <label for="sickDaysDescription" class="control-label">Description:</label>
+                            <textarea class="form-control" id="sickDaysDescription"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="addSickDays">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="cashOutSickDaysModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Uangkan Cuti Sakit</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="cashOutSickDaysStartDate" class="control-label">Uangkan pada tanggal:</label>
+                            <input type="date" class="form-control" id="cashOutSickDaysStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="cashOutSickDayslength" class="control-label">Berapa hari yang diuangkan?</label>
+                            <input type="number" min="1" class="form-control" id="cashOutSickDayslength">
+                        </div>
+                        <button type="button" class="btn btn-primary" id="cashOutAllSickDays">Bring to zero <span class="badge">{{details.sickDaysBalance}}</span></button>
+                        <div class="form-group">
+                            <label for="description" class="control-label">Description:</label>
+                            <textarea class="form-control" id="cashOutSickDaysDescription"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="addSickDaysCashOut">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="creditSickDaysModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Kredit Cuti Sakit</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="creditSickDaysStartDate" class="control-label">Dikreditkan pada tanggal:</label>
+                            <input type="date" class="form-control" id="creditSickDaysStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="creditSickDaysLength" class="control-label">Kreditkan untuk berapa hari?</label>
+                            <input type="number" min="1" class="form-control" id="creditSickDaysLength">
+                        </div>
+                        <button type="button" class="btn btn-primary" id="creditAllSickDays">Bring to zero <span class="badge">{{details.sickDaysBalance}}</span></button>
+                        <div class="form-group">
+                            <label for="creditSickDaysDescription" class="control-label">Description:</label>
+                            <textarea class="form-control" id="creditSickDaysDescription"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="addSickDaysCredit">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </p>
 </template>
 
 <template name="eventsTable">
@@ -280,7 +426,7 @@
                 <tr data-id="{{e.id}}" data-type="{{e.type}}" data-date="{{e.eventStartDate}}" data-description="{{e.description}}"><td>{{e.type}}</td><td>{{toSimpleDate e.eventStartDate}}</td><td>{{e.length}} day(s)</td><td class="description">{{e.description}}</td>{{#if isInRolez 'admin'}}<td><button class="btn btn-default btn-sm deleteEvent"><span class="glyphicon glyphicon-remove"></span></button></td>{{/if}}</tr>
             {{/each}}
         {{else}}
-            <tr><td colspan="4">No event is found.</td></tr>
+            <tr><td colspan="{{#if isInRolez 'admin'}}5{{else}}4{{/if}}">No event is found.</td></tr>
         {{/if}}
         </tbody>
     </table>
