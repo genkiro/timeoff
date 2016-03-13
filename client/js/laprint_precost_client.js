@@ -121,6 +121,7 @@ Template.personnels.events({
                 if (userId == Meteor.userId()) {
                     alertify.error('You cannot delete yourself.');
                 } else {
+                    PersonnelInfo.remove({ _id: userId });
                     Meteor.users.remove({ _id: userId }, function (error, result) {
                         if (error) {
                             alertify.error("Error removing user: ", error);
