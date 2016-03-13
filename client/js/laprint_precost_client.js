@@ -84,9 +84,16 @@ Template.personnels.events({
 
         alertify.prompt('Change start date from "' + oldDate + '" to what?', oldDate,
             function (evt, newDate) {
-                PersonnelInfo.upsert({_id: userId }, { $set: { startDate: moment(newDate).toDate() }}, function () {
+                var selector = { _id: userId };
+                var alertSuccess = function () {
                     alertify.success('Start date was changed from "' + oldDate + '" to "'  + newDate + '"');
-                });
+                };
+
+                if (PersonnelInfo.findOne(selector) != null) {
+                    PersonnelInfo.update(selector, { $set: { startDate: moment(newDate).toDate() }}, alertSuccess);
+                } else {
+                    PersonnelInfo.insert({ _id: userId, events: [], startDate: moment(newDate).toDate() }, alertSuccess);
+                }
             },
             function () {
                 alertify.error('Cancel');
