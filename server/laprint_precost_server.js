@@ -1,20 +1,20 @@
 console.log('server file');
 
 var users = [
-    {name:"Employee Number 1",email:"employee@fake.com",roles:['manager'],password:'pikachu'},
-    {name:"Christine Widjaja",email:"christine.yulianti.widjaja@gmail.com",roles:['admin'],password:'thinkexponential'}
+    {name:"Employee Number 1",username: "employee1", roles:['manager'],password:'pikachu'},
+    {name:"Christine Widjaja",username: "cwidjaja",roles:['admin'],password:'thinkexponential'}
 ];
 
 _.each(users, function (user) {
     var id;
 
-    if (!!Meteor.users.findOne({ "emails.address" : user.email })) {
+    if (!!Meteor.users.findOne({ "username" : user.username })) {
         // if there's the user, don't bother to create
         return;
     }
 
     id = Accounts.createUser({
-        email: user.email,
+        username: user.username,
         password: user.password,
         profile: { name: user.name }
     });
@@ -27,9 +27,9 @@ _.each(users, function (user) {
 
 });
 
-// Some hack so we can see all emails
+// Some hack so we can see all emails & usernames
 Meteor.publish("allUserData", function () {
-    return Meteor.users.find({}, {fields: {"emails.address": 1}});
+    return Meteor.users.find({}, {fields: {"emails.address": 1, "username": 1}});
 });
 
 Meteor.users.allow({

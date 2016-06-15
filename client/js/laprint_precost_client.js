@@ -1,7 +1,11 @@
 console.log('client file');
 
-// Some hack so we can see all emails
+// Some hack so we can see all usernames
 Meteor.subscribe("allUserData");
+
+Accounts.ui.config({
+    passwordSignupFields: 'USERNAME_ONLY'
+});
 
 /* How many rows shown in a page */
 pageSize = 25;
