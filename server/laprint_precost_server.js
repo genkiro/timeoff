@@ -35,5 +35,9 @@ Meteor.publish("allUserData", function () {
 Meteor.users.allow({
     update: function () {
         return Roles.userIsInRole(Meteor.userId(), 'admin');
-    }
+    },
+    remove: function (userId, doc) {
+        return Roles.userIsInRole(Meteor.userId(), 'admin');
+    },
+    fetch: []
 });

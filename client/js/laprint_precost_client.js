@@ -88,9 +88,16 @@ Template.personnels.events({
 
         alertify.prompt('Change start date from "' + oldDate + '" to what?', oldDate,
             function (evt, newDate) {
-                PersonnelInfo.upsert({_id: userId }, { $set: { startDate: moment(newDate).toDate() }}, function () {
+                var selector = { _id: userId };
+                var alertSuccess = function () {
                     alertify.success('Start date was changed from "' + oldDate + '" to "'  + newDate + '"');
-                });
+                };
+
+                if (PersonnelInfo.findOne(selector) != null) {
+                    PersonnelInfo.update(selector, { $set: { startDate: moment(newDate).toDate() }}, alertSuccess);
+                } else {
+                    PersonnelInfo.insert({ _id: userId, events: [], startDate: moment(newDate).toDate() }, alertSuccess);
+                }
             },
             function () {
                 alertify.error('Cancel');
@@ -111,6 +118,34 @@ Template.personnels.events({
                 alertify.error('Cancel');
             }
         ).set('type', 'text');
+    },
+    'click .deleteUser': function (e) {
+        e.preventDefault();
+
+        var userId = $(e.target).closest('tr').data('id');
+        var user = Meteor.users.findOne({_id: userId});
+        var name = user.profile.name;
+        var email = _.pluck(user.emails, 'address').join();
+
+        alertify.confirm('Are you sure you want to delete user "' + name + '" (' + email +') ?',
+            function (evt, newName) {
+                if (userId == Meteor.userId()) {
+                    alertify.error('You cannot delete yourself.');
+                } else {
+                    PersonnelInfo.remove({ _id: userId });
+                    Meteor.users.remove({ _id: userId }, function (error, result) {
+                        if (error) {
+                            alertify.error("Error removing user: ", error);
+                        } else {
+                            alertify.success('Deleted');
+                        }
+                    })
+                }
+            },
+            function () {
+                alertify.error('Cancel');
+            }
+        );
     }
 });
 

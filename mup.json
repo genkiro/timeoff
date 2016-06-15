@@ -1,7 +1,7 @@
 {
   "servers": [
     {
-      "host": "128.199.242.27",
+      "host": "188.166.213.168",
       "username": "root",
       "password": "testpassword1"
       // or pem file (ssh based authentication)

@@ -1,5 +1,3 @@
-var daysToCashOut = new Blaze.ReactiveVar(0);
-var daysToRedeem = new Blaze.ReactiveVar(0);
 var selectedUserId = new Blaze.ReactiveVar();
 
 Template.allBalances.events({
@@ -9,8 +7,8 @@ Template.allBalances.events({
     }
 });
 
-Template.buttons.events({
-    'click #addPTO': function (e) {
+Template.ptoButtons.events({
+    'click #addPto': function (e) {
         e.preventDefault();
 
         PersonnelInfo.upsert(
@@ -18,7 +16,7 @@ Template.buttons.events({
             { $push: {
                 events: {
                     id: Random.id(),
-                    type: 'USAGE',
+                    type: 'DIPAKAI',
                     eventStartDate: moment($('#ptoStartDate').val()).toDate(),
                     length: Number($('#ptoLength').val()),
                     description: $('#ptoDescription').val()
@@ -29,7 +27,7 @@ Template.buttons.events({
             }
         );
     },
-    'click #addCashOut': function (e) {
+    'click #addCashOutPto': function (e) {
         e.preventDefault();
 
         PersonnelInfo.upsert(
@@ -37,10 +35,10 @@ Template.buttons.events({
             { $push: {
                 events: {
                     id: Random.id(),
-                    type: 'CASHOUT',
-                    eventStartDate: moment($('#cashOutDate').val()).startOf('day').toDate(),
-                    length: Number($('#cashOutLength').val()),
-                    description: $('#cashOutDescription').val()
+                    type: 'DIUANGKAN',
+                    eventStartDate: moment($('#cashOutPtoDate').val()).startOf('day').toDate(),
+                    length: Number($('#cashOutPtoLength').val()),
+                    description: $('#cashOutPtoDescription').val()
                 }
             }},
             function () {
@@ -48,7 +46,7 @@ Template.buttons.events({
             }
         );
     },
-    'click #addRedemption': function (e) {
+    'click #addCreditPto': function (e) {
         e.preventDefault();
 
         PersonnelInfo.upsert(
@@ -56,10 +54,10 @@ Template.buttons.events({
             { $push: {
                 events: {
                     id: Random.id(),
-                    type: 'REDEMPTION',
-                    eventStartDate: moment($('#redemptionDate').val()).startOf('day').toDate(),
-                    length: Number($('#redemptionLength').val()),
-                    description: $('#redemptionDescription').val()
+                    type: 'KREDIT',
+                    eventStartDate: moment($('#creditPtoStartDate').val()).startOf('day').toDate(),
+                    length: Number($('#creditPtoLength').val()),
+                    description: $('#creditPtoDescription').val()
                 }
             }},
             function () {
@@ -67,32 +65,105 @@ Template.buttons.events({
             }
         );
     },
-    'click #cashOutAll': function (e) {
+    'click #cashOutAllPto': function (e) {
         e.preventDefault();
-        var balance = calc.getDetails(selectedUserId.get()).balance;
-        $('#cashOutLength').val(balance);
-        daysToCashOut.set(balance);
+        var balance = calc.getDetails(selectedUserId.get()).ptoBalance;
+        if (balance > 0) {
+            $('#cashOutPtoLength').val(balance);
+        }
     },
-    'keydown #cashOutLength, keypress #cashOutLength, keyup #cashOutLength, change #cashOutLength': function (e) {
-        daysToCashOut.set($('#cashOutLength').val());
-    },
-    'click #redemptionAll': function (e) {
+    'click #creditAllPto': function (e) {
         e.preventDefault();
-        var balance = calc.getDetails(selectedUserId.get()).balance;
-        $('#redemptionLength').val(balance);
-        daysToRedeem.set(balance);
-    },
-    'keydown #redemptionLength, keypress #redemptionLength, keyup #redemptionLength, change #redemptionLength': function (e) {
-        daysToRedeem.set($('#redemptionLength').val());
+        var balance = calc.getDetails(selectedUserId.get()).ptoBalance;
+        if (balance < 0) {
+            $('#creditPtoLength').val(-balance);
+        }
     },
     'hidden.bs.modal .modal': function (e) {
         $(e.target).find('form')[0].reset();
-        daysToCashOut.set(0);
-        daysToRedeem.set(0);
+    }
+});
+
+Template.sickDaysButtons.events({
+    'click #addSickDays': function (e) {
+        e.preventDefault();
+
+        PersonnelInfo.upsert(
+            { _id: selectedUserId.get()},
+            { $push: {
+                events: {
+                    id: Random.id(),
+                    type: 'S_DIPAKAI',
+                    eventStartDate: moment($('#sickDaysStartDate').val()).toDate(),
+                    length: Number($('#sickDaysLength').val()),
+                    description: $('#sickDaysDescription').val()
+                }
+            }},
+            function () {
+                alertify.success('Saved!');
+            }
+        );
+    },
+    'click #addSickDaysCashOut': function (e) {
+        e.preventDefault();
+
+        PersonnelInfo.upsert(
+            { _id: selectedUserId.get()},
+            { $push: {
+                events: {
+                    id: Random.id(),
+                    type: 'S_DIUANGKAN',
+                    eventStartDate: moment($('#cashOutSickDaysStartDate').val()).startOf('day').toDate(),
+                    length: Number($('#cashOutSickDayslength').val()),
+                    description: $('#cashOutSickDaysDescription').val()
+                }
+            }},
+            function () {
+                alertify.success('Saved!');
+            }
+        );
+    },
+    'click #addSickDaysCredit': function (e) {
+        e.preventDefault();
+
+        PersonnelInfo.upsert(
+            { _id: selectedUserId.get()},
+            { $push: {
+                events: {
+                    id: Random.id(),
+                    type: 'S_KREDIT',
+                    eventStartDate: moment($('#creditSickDaysStartDate').val()).startOf('day').toDate(),
+                    length: Number($('#creditSickDaysLength').val()),
+                    description: $('#creditSickDaysDescription').val()
+                }
+            }},
+            function () {
+                alertify.success('Saved!');
+            }
+        );
+    },
+    'click #cashOutAllSickDays': function (e) {
+        e.preventDefault();
+        var balance = calc.getDetails(selectedUserId.get()).sickDaysBalance;
+        if (balance > 0) {
+            $('#cashOutSickDayslength').val(balance);
+        }
+    },
+    'click #creditAllSickDays': function (e) {
+        e.preventDefault();
+        var balance = calc.getDetails(selectedUserId.get()).sickDaysBalance;
+        if (balance < 0) {
+            $('#creditSickDaysLength').val(-balance);
+        }
+    },
+    'hidden.bs.modal .modal': function (e) {
+        $(e.target).find('form')[0].reset();
     }
 });
 
 Template.eventsTable.events({
+    //TODO: check bug when we keep on deleting events on the same row
+
     'click .deleteEvent': function (e) {
         e.preventDefault();
 
@@ -109,13 +180,21 @@ Template.eventsTable.events({
                     { $pull: {
                         events: { id: id, eventStartDate: date }
                     } },
-                    function (err) { alertify.success('Deleted'); });
+                    function (err) {
+                        if (err) {
+                            console.log('err: ', err);
+                            alertify.error('Error, see console.log')
+                        }
+
+                        alertify.success('Deleted'); });
             },
-            function () { }
+            function () { alertify.error('Canceled.') }
         );
 
     }
 });
+
+
 
 
 Template.allBalances.helpers({
@@ -125,8 +204,11 @@ Template.allBalances.helpers({
     userId: function () {
         return selectedUserId.get();
     },
-    getBalance: function (id) {
-        return calc.getDetails(id).balance;
+    getPtoBalance: function (id) {
+        return calc.getDetails(id).ptoBalance;
+    },
+    getSickDaysBalance: function (id) {
+        return calc.getDetails(id).sickDaysBalance;
     },
     isSelected: function (id) {
         return selectedUserId.get() == id;
@@ -134,6 +216,12 @@ Template.allBalances.helpers({
 });
 
 Template.info.helpers({
+    accountNotReady: function (id) {
+        var user = Meteor.users.findOne(id);
+        var personnel = PersonnelInfo.findOne({_id: id });
+
+        return !(user.profile.name && personnel && personnel.startDate);
+    },
     name: function (id) {
         return Meteor.users.findOne(id).profile.name;
     },
@@ -142,19 +230,25 @@ Template.info.helpers({
     }
 });
 
-Template.buttons.helpers({
+Template.ptoButtons.helpers({
     details: function () {
         return calc.getDetails(this.userId);
-    },
-    daysToCashOut: function () {
-        return daysToCashOut.get();
-    },
-    daysToSalvage: function () {
-        return daysToRedeem.get();
     }
 });
 
-Template.balanceTable.helpers({
+Template.sickDaysButtons.helpers({
+    details: function () {
+        return calc.getDetails(this.userId);
+    }
+});
+
+Template.ptoBalanceTable.helpers({
+    details: function () {
+        return calc.getDetails(this.userId);
+    }
+});
+
+Template.sickDaysBalanceTable.helpers({
     details: function () {
         return calc.getDetails(this.userId);
     }
