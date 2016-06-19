@@ -119,6 +119,20 @@ Template.personnels.events({
             }
         ).set('type', 'text');
     },
+    'click .resetPassword': function (e) {
+        e.preventDefault();
+
+        var userId = $(e.target).closest('tr').data('id');
+        var user = Meteor.users.findOne({_id: userId});
+        alertify.prompt('Resetting password of "' + user.profile.name + '" (' + user.username + ') to what?', 'newpasswordhere',
+            function (evt, newPassword) {
+                Meteor.call('rezetPassword', userId, newPassword);
+            },
+            function () {
+                alertify.error('Cancel');
+            }
+        ).set('type', 'text');
+    },
     'click .deleteUser': function (e) {
         e.preventDefault();
 
