@@ -444,7 +444,6 @@
                     <!--<th>Email(s)</th>-->
                     <th>Username</th>
                     <th></th>
-                    <th>Reset Password</th>
                     <th>Start Working Date</th>
                     <th></th>
                 </tr>
@@ -456,9 +455,7 @@
                         <td><button class="btn btn-default btn-sm editName"><span class="glyphicon glyphicon-pencil"></span></button></td>
                         <!--<td>{{#each e in user.emails}}{{e.address}} {{/each}}</td>-->
                         <td>{{user.username}}</td>
-                        <td>
-                          <button class="btn btn-default btn-sm resetPassword">Reset Password</button>&nbsp;
-                        </td>
+                        <td><button class="btn btn-default btn-sm resetPassword">Reset Password</button>&nbsp;</td>
                         <td>{{getSimpleStartDate user._id}}</td>
                         <td>
                             <button class="btn btn-default btn-sm editStartDate"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;
