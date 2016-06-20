@@ -46,7 +46,9 @@ $.each({
         if (typeof input != 'undefined' && input instanceof Date) {
             return moment(input).format('D MMMM YYYY');
         } else {
-            return input.format('D MMMM YYYY');
+            if (input) {
+                return input.format('D MMMM YYYY');
+            }
         }
     }
 }, function ( name, handler ) {

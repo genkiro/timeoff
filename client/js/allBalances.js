@@ -7,63 +7,48 @@ Template.allBalances.events({
     }
 });
 
+var alertSaveResult = function (err, result) {
+    if (err) {
+        alertify.error('Error, see console');
+        console.log(err);
+    } else {
+        alertify.success('Saved!');
+    }
+};
+
 Template.ptoButtons.events({
     'click #addPto': function (e) {
         e.preventDefault();
 
-        PersonnelInfo.upsert(
-            { _id: selectedUserId.get()},
-            { $push: {
-                events: {
-                    id: Random.id(),
-                    type: 'DIPAKAI',
-                    eventStartDate: moment($('#ptoStartDate').val()).toDate(),
-                    length: Number($('#ptoLength').val()),
-                    description: $('#ptoDescription').val()
-                }
-            }},
-            function () {
-                alertify.success('Saved!');
-            }
-        );
+        Meteor.call('upzert', selectedUserId.get(), {
+            id: Random.id(),
+            type: 'DIPAKAI',
+            eventStartDate: moment($('#ptoStartDate').val()).toDate(),
+            length: Number($('#ptoLength').val()),
+            description: $('#ptoDescription').val()
+        }, alertSaveResult);
     },
     'click #addCashOutPto': function (e) {
         e.preventDefault();
 
-        PersonnelInfo.upsert(
-            { _id: selectedUserId.get()},
-            { $push: {
-                events: {
-                    id: Random.id(),
-                    type: 'DIUANGKAN',
-                    eventStartDate: moment($('#cashOutPtoDate').val()).startOf('day').toDate(),
-                    length: Number($('#cashOutPtoLength').val()),
-                    description: $('#cashOutPtoDescription').val()
-                }
-            }},
-            function () {
-                alertify.success('Saved!');
-            }
-        );
+        Meteor.call('upzert', selectedUserId.get(), {
+            id: Random.id(),
+            type: 'DIUANGKAN',
+            eventStartDate: moment($('#cashOutPtoDate').val()).startOf('day').toDate(),
+            length: Number($('#cashOutPtoLength').val()),
+            description: $('#cashOutPtoDescription').val()
+        }, alertSaveResult);
     },
     'click #addCreditPto': function (e) {
         e.preventDefault();
 
-        PersonnelInfo.upsert(
-            { _id: selectedUserId.get()},
-            { $push: {
-                events: {
-                    id: Random.id(),
-                    type: 'KREDIT',
-                    eventStartDate: moment($('#creditPtoStartDate').val()).startOf('day').toDate(),
-                    length: Number($('#creditPtoLength').val()),
-                    description: $('#creditPtoDescription').val()
-                }
-            }},
-            function () {
-                alertify.success('Saved!');
-            }
-        );
+        Meteor.call('upzert', selectedUserId.get(), {
+            id: Random.id(),
+            type: 'KREDIT',
+            eventStartDate: moment($('#creditPtoStartDate').val()).startOf('day').toDate(),
+            length: Number($('#creditPtoLength').val()),
+            description: $('#creditPtoDescription').val()
+        }, alertSaveResult);
     },
     'click #cashOutAllPto': function (e) {
         e.preventDefault();
@@ -88,65 +73,41 @@ Template.sickDaysButtons.events({
     'click #addSickDays': function (e) {
         e.preventDefault();
 
-        PersonnelInfo.upsert(
-            { _id: selectedUserId.get()},
-            { $push: {
-                events: {
-                    id: Random.id(),
-                    type: 'S_DIPAKAI',
-                    eventStartDate: moment($('#sickDaysStartDate').val()).toDate(),
-                    length: Number($('#sickDaysLength').val()),
-                    description: $('#sickDaysDescription').val()
-                }
-            }},
-            function () {
-                alertify.success('Saved!');
-            }
-        );
+        Meteor.call('upzert', selectedUserId.get(), {
+            id: Random.id(),
+            type: 'S_DIPAKAI',
+            eventStartDate: moment($('#sickDaysStartDate').val()).toDate(),
+            length: Number($('#sickDaysLength').val()),
+            description: $('#sickDaysDescription').val()
+        }, alertSaveResult);
     },
     'click #addSickDaysCashOut': function (e) {
         e.preventDefault();
 
-        PersonnelInfo.upsert(
-            { _id: selectedUserId.get()},
-            { $push: {
-                events: {
-                    id: Random.id(),
-                    type: 'S_DIUANGKAN',
-                    eventStartDate: moment($('#cashOutSickDaysStartDate').val()).startOf('day').toDate(),
-                    length: Number($('#cashOutSickDayslength').val()),
-                    description: $('#cashOutSickDaysDescription').val()
-                }
-            }},
-            function () {
-                alertify.success('Saved!');
-            }
-        );
+        Meteor.call('upzert', selectedUserId.get(), {
+            id: Random.id(),
+            type: 'S_DIUANGKAN',
+            eventStartDate: moment($('#cashOutSickDaysStartDate').val()).startOf('day').toDate(),
+            length: Number($('#cashOutSickDaysLength').val()),
+            description: $('#cashOutSickDaysDescription').val()
+        }, alertSaveResult);
     },
     'click #addSickDaysCredit': function (e) {
         e.preventDefault();
 
-        PersonnelInfo.upsert(
-            { _id: selectedUserId.get()},
-            { $push: {
-                events: {
-                    id: Random.id(),
-                    type: 'S_KREDIT',
-                    eventStartDate: moment($('#creditSickDaysStartDate').val()).startOf('day').toDate(),
-                    length: Number($('#creditSickDaysLength').val()),
-                    description: $('#creditSickDaysDescription').val()
-                }
-            }},
-            function () {
-                alertify.success('Saved!');
-            }
-        );
+        Meteor.call('upzert', selectedUserId.get(), {
+            id: Random.id(),
+            type: 'S_KREDIT',
+            eventStartDate: moment($('#creditSickDaysStartDate').val()).startOf('day').toDate(),
+            length: Number($('#creditSickDaysLength').val()),
+            description: $('#creditSickDaysDescription').val()
+        }, alertSaveResult);
     },
     'click #cashOutAllSickDays': function (e) {
         e.preventDefault();
         var balance = calc.getDetails(selectedUserId.get()).sickDaysBalance;
         if (balance > 0) {
-            $('#cashOutSickDayslength').val(balance);
+            $('#cashOutSickDaysLength').val(balance);
         }
     },
     'click #creditAllSickDays': function (e) {
@@ -256,6 +217,7 @@ Template.sickDaysBalanceTable.helpers({
 
 Template.eventsTable.helpers({
     events: function (id) {
-        return _.sortBy(PersonnelInfo.findOne(id).events, 'eventStartDate');
+        var info = PersonnelInfo.findOne(id);
+        return info ? _.sortBy(info.events, 'eventStartDate') : '';
     }
 });

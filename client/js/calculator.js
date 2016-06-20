@@ -23,7 +23,7 @@ calc = {
         var sickDaysPlus = [];
         var sickDaysMinus = [];
 
-        while (i.isSameOrBefore(end)) {
+        while (i && i.isSameOrBefore(end)) {
             var nextI = moment(i).add(1, 'months').startOf('month');
 
             // First of the month
