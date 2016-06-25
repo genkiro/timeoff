@@ -253,7 +253,17 @@
         <tbody>
         {{#if details.ptoZipped}}
             {{#each d in details.ptoZipped}}
-                <tr><td>{{d.[0].type}}</td><td>{{d.[0].date}}</td><td>{{d.[1].type}}</td><td>{{d.[1].date}}</td></tr>
+                <tr>
+                  <td>{{d.[0].type}}</td>
+                  <td>{{d.[0].date}}</td>
+                  {{#if d.[1].decoration}}
+                    <td><em class="text-muted initialism small" style="opacity: {{d.[1].opacity}};">{{d.[1].type}}</em></td>
+                    <td><em class="text-muted initialism small" style="opacity: {{d.[1].opacity}};">{{d.[1].date}}</em></td>
+                  {{else}}
+                    <td>{{d.[1].type}}</td>
+                    <td>{{d.[1].date}}</td>
+                  {{/if}}
+                </tr>
             {{/each}}
         {{else}}
             <tr><td colspan="5">No details is found.</td></tr>
@@ -282,7 +292,17 @@
         <tbody>
         {{#if details.sickDaysZipped}}
             {{#each d in details.sickDaysZipped}}
-                <tr><td>{{d.[0].type}}</td><td>{{d.[0].date}}</td><td>{{d.[1].type}}</td><td>{{d.[1].date}}</td></tr>
+                <tr>
+                  <td>{{d.[0].type}}</td>
+                  <td>{{d.[0].date}}</td>
+                  {{#if d.[1].decoration}}
+                    <td><em class="text-muted initialism small" style="opacity: {{d.[1].opacity}};">{{d.[1].type}}</em></td>
+                    <td><em class="text-muted initialism small" style="opacity: {{d.[1].opacity}};">{{d.[1].date}}</em></td>
+                  {{else}}
+                    <td>{{d.[1].type}}</td>
+                    <td>{{d.[1].date}}</td>
+                  {{/if}}
+                </tr>
             {{/each}}
         {{else}}
             <tr><td colspan="5">No details is found.</td></tr>

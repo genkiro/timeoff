@@ -205,13 +205,43 @@ Template.sickDaysButtons.helpers({
 
 Template.ptoBalanceTable.helpers({
     details: function () {
-        return calc.getDetails(this.userId);
+        var details = calc.getDetails(this.userId);
+        _.each(details.ptoZipped, function (el) {
+            if (el[1] && el[1].type === 'AKAN_KADALUARSA') {
+                el[1].decoration = true;
+
+                var top = 1;
+                var bot = 0.3;
+
+                var c = calc.getConstants();
+                var expiryDate = moment(el[1].date, c.dateFormat);
+
+                var expireInMonths = moment.duration(expiryDate.diff(moment())).asMonths();
+                el[1].opacity = top - (expireInMonths / c.ptoExpiryLength) * (top - bot);
+            }
+        });
+        return details;
     }
 });
 
 Template.sickDaysBalanceTable.helpers({
     details: function () {
-        return calc.getDetails(this.userId);
+        var details = calc.getDetails(this.userId);
+        _.each(details.sickDaysZipped, function (el) {
+            if (el[1] && el[1].type === 'AKAN_KADALUARSA') {
+                el[1].decoration = true;
+
+                var top = 1;
+                var bot = 0.3;
+
+                var c = calc.getConstants();
+                var expiryDate = moment(el[1].date, c.dateFormat);
+
+                var expireInMonths = moment.duration(expiryDate.diff(moment())).asMonths();
+                el[1].opacity = top - (expireInMonths / c.sickDaysExpiryLength) * (top - bot);
+            }
+        });
+        return details;
     }
 });
 
